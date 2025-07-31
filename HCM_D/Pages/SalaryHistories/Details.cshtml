@@ -1,0 +1,23 @@
+@page
+@model HCM_D.Pages.SalaryHistories.DetailsModel
+@{
+    ViewData["Title"] = "Salary History Details";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Employee</dt>
+        <dd class="col-sm-10">@Model.SalaryHistory.Employee?.Email</dd>
+        <dt class="col-sm-2">Old Salary</dt>
+        <dd class="col-sm-10">@Model.SalaryHistory.OldSalary</dd>
+        <dt class="col-sm-2">New Salary</dt>
+        <dd class="col-sm-10">@Model.SalaryHistory.NewSalary</dd>
+        <dt class="col-sm-2">Changed On</dt>
+        <dd class="col-sm-10">@Model.SalaryHistory.ChangedOn.ToString("g")</dd>
+        <dt class="col-sm-2">Changed By</dt>
+        <dd class="col-sm-10">@Model.SalaryHistory.ChangedBy</dd>
+    </dl>
+    <a asp-page="Edit" asp-route-id="@Model.SalaryHistory.Id" class="btn btn-primary">Edit</a>
+    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+</div>

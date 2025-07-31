@@ -1,0 +1,49 @@
+﻿@page
+@model HCM_D.Pages.Employees.DetailsModel
+@{
+    ViewData["Title"] = "Employee Details";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+<h2>Employee Details</h2>
+<dl class="row">
+    <dt class="col-sm-3">First Name</dt>
+    <dd class="col-sm-9">@Model.Employee.FirstName</dd>
+    <dt class="col-sm-3">Last Name</dt>
+    <dd class="col-sm-9">@Model.Employee.LastName</dd>
+    <dt class="col-sm-3">Email</dt>
+    <dd class="col-sm-9">@Model.Employee.Email</dd>
+    <dt class="col-sm-3">Job Title</dt>
+    <dd class="col-sm-9">@Model.Employee.JobTitle</dd>
+    <dt class="col-sm-3">Salary</dt>
+    <dd class="col-sm-9">@Model.Employee.Salary.ToString("C")</dd>
+    <dt class="col-sm-3">Department</dt>
+    <dd class="col-sm-9">@Model.Employee.Department?.Name</dd>
+</dl>
+<h3>Salary History</h3>
+@if (Model.SalaryHistoryList == null || Model.SalaryHistoryList.Count == 0)
+{
+    <p>No salary changes recorded for this employee.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date Changed</th>
+                <th>Old Salary</th>
+                <th>New Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var history in Model.SalaryHistoryList)
+            {
+                <tr>
+                    <td>@history.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@history.OldSalary.ToString("C")</td>
+                    <td>@history.NewSalary.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<a asp-page="Index" class="btn btn-secondary">Back to List</a>

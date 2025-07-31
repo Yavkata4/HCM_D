@@ -1,0 +1,38 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h1 class="card-title mb-4"><i class="bi bi-shield-lock me-2"></i>@ViewData["Title"]</h1>
+                    <p class="lead">At NovaHR Solutions, we are committed to protecting your privacy and ensuring the security of your personal information.</p>
+                    <hr />
+                    <h5>Information We Collect</h5>
+                    <ul>
+                        <li>Personal identification information (Name, email address, phone number, etc.)</li>
+                        <li>Employment and payroll data</li>
+                        <li>Usage and log data</li>
+                    </ul>
+                    <h5>How We Use Your Information</h5>
+                    <ul>
+                        <li>To manage employee records and HR processes</li>
+                        <li>To improve our platform and services</li>
+                        <li>To comply with legal obligations</li>
+                    </ul>
+                    <h5>Your Rights</h5>
+                    <ul>
+                        <li>Access, update, or delete your personal data</li>
+                        <li>Request information about our data practices</li>
+                    </ul>
+                    <p class="mt-4">For more details, please contact our privacy team at <a href="mailto:privacy@novahr.com">privacy@novahr.com</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

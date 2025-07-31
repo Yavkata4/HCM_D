@@ -1,0 +1,147 @@
+﻿@page
+@model HCM_D.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employees";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="d-flex align-items-center">
+                <div class="position-relative">
+                    <i class="bi bi-search position-absolute ps-3" style="top: 50%; transform: translateY(-50%);"></i>
+                    <input type="text" id="employeeSearch" class="form-control ps-5" placeholder="Search employees..." 
+                           style="padding-left: 2.5rem; border-radius: 20px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-md-end">
+            @if (User.IsInRole("HR Admin"))
+            {
+                <a asp-page="Create" class="btn btn-primary" style="border-radius: 20px;">
+                    <i class="bi bi-person-plus-fill"></i> Add Employee
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var employee in Model.Employees)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="employee-avatar">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                                     style="width: 48px; height: 48px; font-size: 20px;">
+                                    @(employee.FirstName[0].ToString().ToUpper())@(employee.LastName[0].ToString().ToUpper())
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="Details" asp-route-id="@employee.Id">
+                                            <i class="bi bi-eye me-2"></i> View Details
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="Edit" asp-route-id="@employee.Id">
+                                            <i class="bi bi-pencil me-2"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@employee.Id">
+                                            <i class="bi bi-trash me-2"></i> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-1">@employee.FirstName @employee.LastName</h5>
+                        <p class="text-muted small mb-2">@employee.JobTitle</p>
+                        <div class="employee-info mt-3">
+                            <p class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-envelope me-2 text-muted"></i>
+                                <span class="small">@employee.Email</span>
+                            </p>
+                            <p class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-building me-2 text-muted"></i>
+                                <span class="small">@employee.Department?.Name</span>
+                            </p>
+                            <p class="mb-0 d-flex align-items-center">
+                                <i class="bi bi-currency-dollar me-2 text-muted"></i>
+                                <span class="small">@employee.Salary.ToString("C0")</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    background: white;
+}
+
+.employee-info i {
+    width: 16px;
+}
+
+#employeeSearch:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    border-color: #86b7fe;
+}
+
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+
+<style media="screen and (max-width: 767.98px)">
+.col-md-6.text-md-end {
+    margin-top: 1rem;
+    text-align: left !important;
+}
+</style>
+
+<script>
+document.getElementById('employeeSearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.col-xl-3');
+    
+    cards.forEach(card => {
+        const content = card.textContent.toLowerCase();
+        card.style.display = content.includes(searchTerm) ? '' : 'none';
+    });
+});
+</script>

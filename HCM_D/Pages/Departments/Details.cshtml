@@ -1,0 +1,18 @@
+﻿@page
+@model HCM_D.Pages.Departments.DetailsModel
+@{
+    ViewData["Title"] = "Department Details";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<h1>Employee Details</h1>
+
+<div>
+    <p><strong>Name:</strong> @Model.Employee.FirstName @Model.Employee.LastName</p>
+    <p><strong>Email:</strong> @Model.Employee.Email</p>
+    <p><strong>Job Title:</strong> @Model.Employee.JobTitle</p>
+    <p><strong>Salary:</strong> @Model.Employee.Salary</p>
+    <p><strong>Department:</strong> @Model.Employee.Department?.Name</p>
+</div>
+
+<a asp-page="Index" class="btn btn-secondary">Back to List</a>

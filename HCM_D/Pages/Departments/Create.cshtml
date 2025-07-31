@@ -1,0 +1,22 @@
+﻿@page
+@model HCM_D.Pages.Departments.CreateModel
+@{
+    ViewData["Title"] = "Create Department";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<h1>Create Department</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Department.Name" class="form-label"></label>
+        <input asp-for="Department.Name" class="form-control" />
+        <span asp-validation-for="Department.Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

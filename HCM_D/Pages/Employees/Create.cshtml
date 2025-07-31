@@ -1,0 +1,52 @@
+﻿@page
+@model HCM_D.Pages.Employees.CreateModel
+@{
+    ViewData["Title"] = "Create Employee";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Employee.FirstName"></label>
+        <input asp-for="Employee.FirstName" class="form-control" />
+        <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.LastName"></label>
+        <input asp-for="Employee.LastName" class="form-control" />
+        <span asp-validation-for="Employee.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.Email"></label>
+        <input asp-for="Employee.Email" class="form-control" />
+        <span asp-validation-for="Employee.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.JobTitle"></label>
+        <input asp-for="Employee.JobTitle" class="form-control" />
+        <span asp-validation-for="Employee.JobTitle" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.Salary"></label>
+        <input asp-for="Employee.Salary" class="form-control" />
+        <span asp-validation-for="Employee.Salary" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Employee.DepartmentId">Department</label>
+        <select asp-for="Employee.DepartmentId" class="form-control" asp-items="Model.Departments"></select>
+        <span asp-validation-for="Employee.DepartmentId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

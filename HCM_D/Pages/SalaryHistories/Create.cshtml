@@ -1,0 +1,34 @@
+@page
+@model HCM_D.Pages.SalaryHistories.CreateModel
+@{
+    ViewData["Title"] = "Create Salary Change";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="post">
+    <div class="form-group">
+        <label asp-for="SalaryHistory.EmployeeId">Employee</label>
+        <select asp-for="SalaryHistory.EmployeeId" class="form-control" asp-items="Model.Employees"></select>
+        <span asp-validation-for="SalaryHistory.EmployeeId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SalaryHistory.OldSalary"></label>
+        <input asp-for="SalaryHistory.OldSalary" class="form-control" />
+        <span asp-validation-for="SalaryHistory.OldSalary" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SalaryHistory.NewSalary"></label>
+        <input asp-for="SalaryHistory.NewSalary" class="form-control" />
+        <span asp-validation-for="SalaryHistory.NewSalary" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SalaryHistory.ChangedBy"></label>
+        <input asp-for="SalaryHistory.ChangedBy" class="form-control" />
+        <span asp-validation-for="SalaryHistory.ChangedBy" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
