@@ -15,17 +15,17 @@ namespace HCM_D.Pages.Departments
             _context = context;
         }
 
-        public Employee Employee { get; set; }
+        public Department Department { get; set; } = null!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null) return NotFound();
 
-            Employee = await _context.Employees
-                .Include(e => e.Department)
+            Department = await _context.Departments
+                .Include(d => d.Employees)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Employee == null) return NotFound();
+            if (Department == null) return NotFound();
 
             return Page();
         }

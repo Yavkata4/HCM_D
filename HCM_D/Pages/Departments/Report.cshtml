@@ -1,0 +1,44 @@
+@page
+@model HCM_D.Pages.Departments.ReportModel
+@{
+    ViewData["Title"] = "Department Report";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Department Report</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Employee Count</th>
+                                    <th>Average Salary</th>
+                                    <th>Highest Salary</th>
+                                    <th>Lowest Salary</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var dept in Model.Departments)
+                                {
+                                    var salaries = dept.Employees?.Select(e => e.Salary).ToList() ?? new List<decimal>();
+                                    <tr>
+                                        <td>@dept.Name</td>
+                                        <td>@(dept.Employees?.Count ?? 0)</td>
+                                        <td>@(salaries.Count > 0 ? salaries.Average().ToString("C0") : "-")</td>
+                                        <td>@(salaries.Count > 0 ? salaries.Max().ToString("C0") : "-")</td>
+                                        <td>@(salaries.Count > 0 ? salaries.Min().ToString("C0") : "-")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

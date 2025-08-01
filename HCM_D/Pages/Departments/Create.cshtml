@@ -5,17 +5,28 @@
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
-<h1>Create Department</h1>
-
-<form method="post">
-    <div class="mb-3">
-        <label asp-for="Department.Name" class="form-label"></label>
-        <input asp-for="Department.Name" class="form-control" />
-        <span asp-validation-for="Department.Name" class="text-danger"></span>
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-sm content-glass">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Create Department</h3>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="Department.Name" class="form-label"></label>
+                            <input asp-for="Department.Name" class="form-control" />
+                            <span asp-validation-for="Department.Name" class="text-danger"></span>
+                        </div>
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">Save</button>
+                            <a asp-page="Index" class="btn btn-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

@@ -5,18 +5,84 @@
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
-<h1>Edit Department</h1>
-
-<form method="post">
-    <input type="hidden" asp-for="Department.Id" />
-    <div class="mb-3">
-        <label asp-for="Department.Name" class="form-label"></label>
-        <input asp-for="Department.Name" class="form-control" />
-        <span asp-validation-for="Department.Name" class="text-danger"></span>
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Edit Department</h3>
+                    <form method="post">
+                        <input type="hidden" asp-for="Department.Id" />
+                        <div class="mb-3">
+                            <label asp-for="Department.Name" class="form-label"></label>
+                            <input asp-for="Department.Name" class="form-control" />
+                            <span asp-validation-for="Department.Name" class="text-danger"></span>
+                        </div>
+                        <div class="mt-4 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">Update</button>
+                            <a asp-page="Index" class="btn btn-secondary px-4">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-3">Manage Employees</h4>
+                    @if (Model.Department.Employees != null && Model.Department.Employees.Count > 0)
+                    {
+                        <form method="post">
+                            <input type="hidden" name="departmentId" value="@Model.Department.Id" />
+                            <table class="table table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Job Title</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var emp in Model.Department.Employees)
+                                    {
+                                        <tr>
+                                            <td>@emp.FirstName @emp.LastName</td>
+                                            <td>@emp.Email</td>
+                                            <td>@emp.JobTitle</td>
+                                            <td>
+                                                <button type="submit" name="removeEmployeeId" value="@emp.Id" class="btn btn-sm btn-outline-danger">Remove</button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </form>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No employees in this department.</p>
+                    }
+                    <form method="post" class="mt-3">
+                        <input type="hidden" name="departmentId" value="@Model.Department.Id" />
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <select name="addEmployeeId" class="form-select">
+                                    <option value="">Select employee to add...</option>
+                                    @foreach (var emp in Model.AvailableEmployees)
+                                    {
+                                        <option value="@emp.Id">@emp.FirstName @emp.LastName (@emp.Email)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Add Employee</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a asp-page="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

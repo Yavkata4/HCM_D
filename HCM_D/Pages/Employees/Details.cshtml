@@ -4,46 +4,77 @@
     ViewData["Title"] = "Employee Details";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
-<h2>Employee Details</h2>
-<dl class="row">
-    <dt class="col-sm-3">First Name</dt>
-    <dd class="col-sm-9">@Model.Employee.FirstName</dd>
-    <dt class="col-sm-3">Last Name</dt>
-    <dd class="col-sm-9">@Model.Employee.LastName</dd>
-    <dt class="col-sm-3">Email</dt>
-    <dd class="col-sm-9">@Model.Employee.Email</dd>
-    <dt class="col-sm-3">Job Title</dt>
-    <dd class="col-sm-9">@Model.Employee.JobTitle</dd>
-    <dt class="col-sm-3">Salary</dt>
-    <dd class="col-sm-9">@Model.Employee.Salary.ToString("C")</dd>
-    <dt class="col-sm-3">Department</dt>
-    <dd class="col-sm-9">@Model.Employee.Department?.Name</dd>
-</dl>
-<h3>Salary History</h3>
-@if (Model.SalaryHistoryList == null || Model.SalaryHistoryList.Count == 0)
-{
-    <p>No salary changes recorded for this employee.</p>
-}
-else
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Date Changed</th>
-                <th>Old Salary</th>
-                <th>New Salary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var history in Model.SalaryHistoryList)
-            {
-                <tr>
-                    <td>@history.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@history.OldSalary.ToString("C")</td>
-                    <td>@history.NewSalary.ToString("C")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-<a asp-page="Index" class="btn btn-secondary">Back to List</a>
+
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7 col-md-9">
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h3 class="mb-4">Employee Details</h3>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">First Name</label>
+                            <div>@Model.Employee.FirstName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Last Name</label>
+                            <div>@Model.Employee.LastName</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Email</label>
+                            <div>@Model.Employee.Email</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Job Title</label>
+                            <div>@Model.Employee.JobTitle</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Salary</label>
+                            <div>@Model.Employee.Salary.ToString("C")</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Department</label>
+                            <div>@Model.Employee.Department?.Name</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-3">Salary History</h4>
+                    @if (Model.SalaryHistoryList == null || Model.SalaryHistoryList.Count == 0)
+                    {
+                        <p class="text-muted">No salary changes recorded for this employee.</p>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date Changed</th>
+                                        <th>Old Salary</th>
+                                        <th>New Salary</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var history in Model.SalaryHistoryList)
+                                    {
+                                        <tr>
+                                            <td>@history.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td>@history.OldSalary.ToString("C")</td>
+                                            <td>@history.NewSalary.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="mb-4">
+                <a asp-page="Index" class="btn btn-secondary px-4">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>

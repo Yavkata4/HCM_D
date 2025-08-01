@@ -4,34 +4,137 @@
     ViewData["Title"] = "Salary History";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
-<h2>Salary History</h2>
-<a asp-page="Create" class="btn btn-primary">Add Salary Change</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Employee</th>
-            <th>Old Salary</th>
-            <th>New Salary</th>
-            <th>Changed On</th>
-            <th>Changed By</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.SalaryHistories)
-    {
-        <tr>
-            <td>@item.Employee?.FirstName @item.Employee?.LastName</td>
-            <td>@item.OldSalary</td>
-            <td>@item.NewSalary</td>
-            <td>@item.ChangedOn.ToString("g")</td>
-            <td>@item.ChangedBy</td>
-            <td>
-                <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+
+<div class="container-fluid px-4">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="d-flex align-items-center">
+                <div class="position-relative">
+                    <i class="bi bi-search position-absolute ps-3" style="top: 50%; transform: translateY(-50%);"></i>
+                    <input type="text" id="salaryHistorySearch" class="form-control ps-5" placeholder="Search salary history..."
+                           style="padding-left: 2.5rem; border-radius: 20px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a asp-page="Create" class="btn btn-primary" style="border-radius: 20px;">
+                <i class="bi bi-currency-dollar"></i> Add Salary Change
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model.SalaryHistories)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6 salary-history-card">
+                <div class="card h-100 shadow-sm hover-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="salary-avatar">
+                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center"
+                                     style="width: 48px; height: 48px; font-size: 20px;">
+                                    <i class="bi bi-currency-dollar"></i>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" asp-page="Details" asp-route-id="@item.Id">
+                                            <i class="bi bi-eye me-2"></i> Details
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="Edit" asp-route-id="@item.Id">
+                                            <i class="bi bi-pencil me-2"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@item.Id">
+                                            <i class="bi bi-trash me-2"></i> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <h5 class="card-title mb-1">@item.Employee?.FirstName @item.Employee?.LastName</h5>
+                        <p class="text-muted small mb-2">Salary Change</p>
+                        <div class="salary-info mt-3">
+                            <p class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-arrow-up-circle me-2 text-success"></i>
+                                <span class="small">Old: @item.OldSalary.ToString("C0")</span>
+                            </p>
+                            <p class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-arrow-down-circle me-2 text-danger"></i>
+                                <span class="small">New: @item.NewSalary.ToString("C0")</span>
+                            </p>
+                            <p class="mb-2 d-flex align-items-center">
+                                <i class="bi bi-calendar me-2 text-muted"></i>
+                                <span class="small">@item.ChangedOn.ToString("yyyy-MM-dd HH:mm")</span>
+                            </p>
+                            <p class="mb-0 d-flex align-items-center">
+                                <i class="bi bi-person me-2 text-muted"></i>
+                                <span class="small">@item.ChangedBy</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    background: white;
+}
+.salary-info i {
+    width: 16px;
+}
+#salaryHistorySearch:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    border-color: #86b7fe;
+}
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+</style>
+
+<style media="screen and (max-width: 767.98px)">
+.col-md-6.text-md-end {
+    margin-top: 1rem;
+    text-align: left !important;
+}
+</style>
+
+<script>
+document.getElementById('salaryHistorySearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.salary-history-card');
+    cards.forEach(card => {
+        const content = card.textContent.toLowerCase();
+        card.style.display = content.includes(searchTerm) ? '' : 'none';
+    });
+});
+</script>

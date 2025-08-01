@@ -14,66 +14,76 @@
 </head>
 
 <body>
-    <div class="sidebar-wrapper">
-        <div class="sidebar d-flex flex-column p-3">
-            <a class="navbar-brand mb-4" asp-area="" asp-page="/Index">
-                <div class="brand-container text-center">
-                    <i class="bi bi-bar-chart-line brand-icon"></i>
-                    <div class="brand-text">NovaHR Solutions</div>
+    <header class="main-header">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand" asp-page="/Index">
+                    <i class="bi bi-bar-chart-line"></i>
+                    NovaHR
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" asp-page="/Index" role="button">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                Workforce <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-page="/Employees/Index">Employee Directory</a></li>
+                                <li><a class="dropdown-item" asp-page="/Departments/Index">Departments</a></li>
+                                <li><a class="dropdown-item" asp-page="/SalaryHistories/Index">Salary Records</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                Reports <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-page="/Departments/Report">Department Reports</a></li>
+                                <li><a class="dropdown-item" href="#">Salary Analytics</a></li>
+                                <li><a class="dropdown-item" href="#">Employee Statistics</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+
+                    <div class="nav-end">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
-            </a>
-            <nav class="nav flex-column">
-                <a class="nav-link d-flex align-items-center" asp-area="" asp-page="/Index">
-                    <i class="bi bi-house-door nav-icon"></i>
-                    <span class="nav-text">Home</span>
-                </a>
-                <a class="nav-link d-flex align-items-center" asp-area="" asp-page="/Employees/Index">
-                    <i class="bi bi-person-badge nav-icon"></i>
-                    <span class="nav-text">Employees</span>
-                </a>
-                <a class="nav-link d-flex align-items-center" asp-area="" asp-page="/Departments/Index">
-                    <i class="bi bi-building nav-icon"></i>
-                    <span class="nav-text">Departments</span>
-                </a>
-                <a class="nav-link d-flex align-items-center" asp-area="" asp-page="/SalaryHistories/Index">
-                    <i class="bi bi-currency-dollar nav-icon"></i>
-                    <span class="nav-text">Salary History</span>
-                </a>
-                <a class="nav-link d-flex align-items-center" asp-area="" asp-page="/Privacy">
-                    <i class="bi bi-shield-lock nav-icon"></i>
-                    <span class="nav-text">Privacy</span>
-                </a>
-            </nav>
-            <div class="mt-auto">
-                <partial name="_LoginPartial" />
             </div>
-        </div>
-    </div>
+        </nav>
+    </header>
+
     <div class="main-wrapper">
-        <div class="topbar">
-            <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                <div class="d-flex align-items-center">
-                    <button class="btn btn-link text-dark p-0 me-3 d-lg-none menu-toggle">
-                        <i class="bi bi-list fs-4"></i>
-                    </button>
-                    <h4 class="mb-0">@ViewData["Title"]</h4>
-                </div>
-                <div class="d-flex align-items-center">
-                    <a asp-page="/Employees/MyProfile" class="profile-button">
-                        <i class="bi bi-person-circle"></i>
-                        <span class="ms-2">My Profile</span>
-                    </a>
+        @if (!string.IsNullOrEmpty(ViewData["Title"]?.ToString()))
+        {
+            <div class="page-header">
+                <div class="container-fluid px-4">
+                    <h1 class="page-title display-6 mb-4">@ViewData["Title"]</h1>
                 </div>
             </div>
-        </div>
-        <div class="main-content">
+        }
+        <main class="main-content">
             @RenderBody()
-        </div>
+        </main>
+
         <footer class="footer">
-            <div class="container-fluid">
+            <div class="container-fluid px-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>&copy; @DateTime.Now.Year - NovaHR Solutions</span>
-                    <a asp-area="" asp-page="/Privacy">Privacy Policy</a>
+                    <span>&copy; @DateTime.Now.Year NovaHR Solutions</span>
+                    <a asp-page="/Privacy">Privacy Policy</a>
                 </div>
             </div>
         </footer>
@@ -82,26 +92,35 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Handle active navigation links
         document.addEventListener('DOMContentLoaded', function () {
+            // Handle active navigation state
             const currentPath = window.location.pathname;
             document.querySelectorAll('.nav-link').forEach(link => {
                 if (link.getAttribute('href') === currentPath) {
                     link.classList.add('active');
+                    const dropdownParent = link.closest('.dropdown-menu');
+                    if (dropdownParent) {
+                        dropdownParent.previousElementSibling?.classList.add('active');
+                    }
                 }
             });
 
-            // Mobile menu toggle
-            const menuToggle = document.querySelector('.menu-toggle');
-            const sidebarWrapper = document.querySelector('.sidebar-wrapper');
-            const mainWrapper = document.querySelector('.main-wrapper');
+            // Handle navbar background on scroll
+            const header = document.querySelector('.main-header');
+            let lastScroll = 0;
 
-            if (menuToggle) {
-                menuToggle.addEventListener('click', function () {
-                    sidebarWrapper.classList.toggle('sidebar-mobile-open');
-                    mainWrapper.classList.toggle('main-shifted');
-                });
-            }
+            const handleScroll = () => {
+                const currentScroll = window.scrollY;
+                if (currentScroll > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                lastScroll = currentScroll;
+            };
+
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
