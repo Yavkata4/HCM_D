@@ -1,70 +1,100 @@
 ﻿@page
 @model HCM_D.Pages.Employees.IndexModel
 @{
-    ViewData["Title"] = "Employees";
+    ViewData["Title"] = Model.IsManager ? $"{Model.DepartmentName} Department Employees" : "Employee Directory";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
 <div class="container-fluid px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            @if (Model.IsManager)
+            {
+                <h1 class="h3 mb-1">@Model.DepartmentName Department</h1>
+                <p class="text-muted">Manage employees in your department</p>
+            }
+            else
+            {
+                <h1 class="h3 mb-1">Employee Directory</h1>
+                <p class="text-muted">Manage and view employee information</p>
+            }
+        </div>
+        @if (Model.CanEditEmployees)
+        {
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-person-plus"></i> Add New Employee
+            </a>
+        }
+    </div>
+
+    @if (Model.IsManager && !string.IsNullOrEmpty(Model.DepartmentName))
+    {
+        <div class="alert alert-info mb-4">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Manager View:</strong> You are viewing employees in your department only. 
+            You have access to @Model.Employees.Count employee(s) in the @Model.DepartmentName department.
+        </div>
+    }
+
+    <!-- Search Bar -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="d-flex align-items-center">
-                <div class="position-relative">
-                    <i class="bi bi-search position-absolute ps-3" style="top: 50%; transform: translateY(-50%);"></i>
-                    <input type="text" id="employeeSearch" class="form-control ps-5" placeholder="Search employees..." 
-                           style="padding-left: 2.5rem; border-radius: 20px;">
-                </div>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" id="employeeSearch" placeholder="Search employees...">
             </div>
-        </div>
-        <div class="col-md-6 text-md-end">
-            @if (User.IsInRole("HR Admin"))
-            {
-                <a asp-page="Create" class="btn btn-primary" style="border-radius: 20px;">
-                    <i class="bi bi-person-plus-fill"></i> Add Employee
-                </a>
-            }
         </div>
     </div>
 
-    <div class="row g-4">
+    <!-- Employee Cards -->
+    <div class="row" id="employeeGrid">
         @foreach (var employee in Model.Employees)
         {
-            <div class="col-xl-3 col-lg-4 col-md-6">
-                <div class="card h-100 shadow-sm hover-card">
+            <div class="col-xl-4 col-lg-6 col-md-6 mb-4 employee-card">
+                <div class="card hover-card h-100">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="employee-avatar">
-                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
-                                     style="width: 48px; height: 48px; font-size: 20px;">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; font-weight: bold;">
                                     @(employee.FirstName[0].ToString().ToUpper())@(employee.LastName[0].ToString().ToUpper())
                                 </div>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Details" asp-route-id="@employee.Id">
-                                            <i class="bi bi-eye me-2"></i> View Details
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Edit" asp-route-id="@employee.Id">
-                                            <i class="bi bi-pencil me-2"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@employee.Id">
-                                            <i class="bi bi-trash me-2"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                            @if (Model.CanEditEmployees)
+                            {
+                                <div class="dropdown">
+                                    <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" asp-page="Details" asp-route-id="@employee.Id">
+                                                <i class="bi bi-eye me-2"></i> View Details
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-page="Edit" asp-route-id="@employee.Id">
+                                                <i class="bi bi-pencil me-2"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@employee.Id">
+                                                <i class="bi bi-trash me-2"></i> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
                         </div>
+                        
+                        <!-- Employee Number Badge -->
+                        <div class="mb-2">
+                            <span class="badge bg-secondary">@employee.EmployeeNumber</span>
+                        </div>
+                        
                         <h5 class="card-title mb-1">@employee.FirstName @employee.LastName</h5>
                         <p class="text-muted small mb-2">@employee.JobTitle</p>
+                        
                         <div class="employee-info mt-3">
                             <p class="mb-2 d-flex align-items-center">
                                 <i class="bi bi-envelope me-2 text-muted"></i>
@@ -74,16 +104,49 @@
                                 <i class="bi bi-building me-2 text-muted"></i>
                                 <span class="small">@employee.Department?.Name</span>
                             </p>
-                            <p class="mb-0 d-flex align-items-center">
+                            <p class="mb-2 d-flex align-items-center">
                                 <i class="bi bi-currency-dollar me-2 text-muted"></i>
                                 <span class="small">@employee.Salary.ToString("C0")</span>
                             </p>
+                            <p class="mb-0 d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2 text-muted"></i>
+                                <span class="small">Hired: @employee.HireDate.ToString("MMM dd, yyyy")</span>
+                            </p>
+                            <div class="mt-2">
+                                <small class="text-success">
+                                    <i class="bi bi-clock-history me-1"></i>
+                                    @employee.YearsOfService.ToString("F1") years of service
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    @if (!Model.Employees.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-people text-muted" style="font-size: 4rem;"></i>
+            @if (Model.IsManager)
+            {
+                <h4 class="text-muted mt-3">No Employees in Your Department</h4>
+                <p class="text-muted">There are no employees assigned to the @Model.DepartmentName department yet.</p>
+            }
+            else
+            {
+                <h4 class="text-muted mt-3">No Employees Found</h4>
+                <p class="text-muted">Start by adding some employees to your organization.</p>
+            }
+            @if (Model.CanEditEmployees)
+            {
+                <a asp-page="Create" class="btn btn-primary mt-3">
+                    <i class="bi bi-person-plus"></i> Add First Employee
+                </a>
+            }
+        </div>
+    }
 </div>
 
 <style>
@@ -125,6 +188,10 @@
 .dropdown-item:hover {
     background-color: #f8f9fa;
 }
+
+.badge {
+    font-size: 0.75rem;
+}
 </style>
 
 <style media="screen and (max-width: 767.98px)">
@@ -137,7 +204,7 @@
 <script>
 document.getElementById('employeeSearch').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.col-xl-3');
+    const cards = document.querySelectorAll('.employee-card');
     
     cards.forEach(card => {
         const content = card.textContent.toLowerCase();

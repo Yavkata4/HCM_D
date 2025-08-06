@@ -1,140 +1,153 @@
 @page
 @model HCM_D.Pages.SalaryHistories.IndexModel
 @{
-    ViewData["Title"] = "Salary History";
+    ViewData["Title"] = Model.IsManager ? $"{Model.DepartmentName} Department - Salary History" : "Salary History";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
-<div class="container-fluid px-4">
-    <div class="row mb-4">
+<div class="container py-4">
+    <div class="row">
         <div class="col-md-6">
-            <div class="d-flex align-items-center">
-                <div class="position-relative">
-                    <i class="bi bi-search position-absolute ps-3" style="top: 50%; transform: translateY(-50%);"></i>
-                    <input type="text" id="salaryHistorySearch" class="form-control ps-5" placeholder="Search salary history..."
-                           style="padding-left: 2.5rem; border-radius: 20px;">
-                </div>
-            </div>
+            @if (Model.IsManager)
+            {
+                <h2>
+                    <i class="bi bi-clock-history me-2"></i>
+                    @Model.DepartmentName Department
+                </h2>
+                <p class="text-muted">Salary history for your department employees</p>
+            }
+            else
+            {
+                <h2>
+                    <i class="bi bi-clock-history me-2"></i>
+                    Salary History
+                </h2>
+                <p class="text-muted">Complete salary change history</p>
+            }
         </div>
         <div class="col-md-6 text-md-end">
-            <a asp-page="Create" class="btn btn-primary" style="border-radius: 20px;">
-                <i class="bi bi-currency-dollar"></i> Add Salary Change
+            <a asp-page="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
+                Create New
             </a>
         </div>
     </div>
 
-    <div class="row g-4">
-        @foreach (var item in Model.SalaryHistories)
-        {
-            <div class="col-xl-3 col-lg-4 col-md-6 salary-history-card">
-                <div class="card h-100 shadow-sm hover-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="salary-avatar">
-                                <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center"
-                                     style="width: 48px; height: 48px; font-size: 20px;">
-                                    <i class="bi bi-currency-dollar"></i>
-                                </div>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Details" asp-route-id="@item.Id">
-                                            <i class="bi bi-eye me-2"></i> Details
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Edit" asp-route-id="@item.Id">
-                                            <i class="bi bi-pencil me-2"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@item.Id">
-                                            <i class="bi bi-trash me-2"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <h5 class="card-title mb-1">@item.Employee?.FirstName @item.Employee?.LastName</h5>
-                        <p class="text-muted small mb-2">Salary Change</p>
-                        <div class="salary-info mt-3">
-                            <p class="mb-2 d-flex align-items-center">
-                                <i class="bi bi-arrow-up-circle me-2 text-success"></i>
-                                <span class="small">Old: @item.OldSalary.ToString("C0")</span>
-                            </p>
-                            <p class="mb-2 d-flex align-items-center">
-                                <i class="bi bi-arrow-down-circle me-2 text-danger"></i>
-                                <span class="small">New: @item.NewSalary.ToString("C0")</span>
-                            </p>
-                            <p class="mb-2 d-flex align-items-center">
-                                <i class="bi bi-calendar me-2 text-muted"></i>
-                                <span class="small">@item.ChangedOn.ToString("yyyy-MM-dd HH:mm")</span>
-                            </p>
-                            <p class="mb-0 d-flex align-items-center">
-                                <i class="bi bi-person me-2 text-muted"></i>
-                                <span class="small">@item.ChangedBy</span>
-                            </p>
-                        </div>
-                    </div>
+    @if (Model.IsManager && !string.IsNullOrEmpty(Model.DepartmentName))
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Manager View:</strong> You are viewing salary histories for employees in your department only. 
+            Total employees with salary changes: @Model.EmployeeSalaryHistories.Count
+        </div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            @if (Model.EmployeeSalaryHistories == null || Model.EmployeeSalaryHistories.Count == 0)
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    @if (Model.IsManager)
+                    {
+                        <h4 class="text-muted mt-3">No salary history in your department</h4>
+                        <p class="text-muted">No salary changes have been recorded for employees in the @Model.DepartmentName department yet.</p>
+                    }
+                    else
+                    {
+                        <h4 class="text-muted mt-3">No salary history found</h4>
+                        <p class="text-muted">No salary changes have been recorded yet.</p>
+                    }
+                    <a asp-page="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Create First Salary Change
+                    </a>
                 </div>
-            </div>
-        }
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Old Salary</th>
+                                <th>New Salary</th>
+                                <th>Change</th>
+                                <th>Changed On</th>
+                                <th>Changed By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var empGroup in Model.EmployeeSalaryHistories)
+                            {
+                                var latestChange = empGroup.LatestChange;
+                                var salaryChange = latestChange.NewSalary - latestChange.OldSalary;
+                                var changePercentage = latestChange.OldSalary > 0 ? (salaryChange / latestChange.OldSalary) * 100 : 0;
+                                
+                                <tr>
+                                    <td>
+                                        <strong>@empGroup.Employee.FullName</strong><br />
+                                        <small class="text-muted">@empGroup.Employee.JobTitle</small>
+                                    </td>
+                                    <td>@empGroup.Employee.Department?.Name</td>
+                                    <td>@latestChange.OldSalary.ToString("C")</td>
+                                    <td>@latestChange.NewSalary.ToString("C")</td>
+                                    <td>
+                                        @if (salaryChange > 0)
+                                        {
+                                            <span class="text-success">
+                                                <i class="bi bi-arrow-up"></i>
+                                                +@salaryChange.ToString("C") (+@changePercentage.ToString("F1")%
+                                            </span>
+                                        }
+                                        else if (salaryChange < 0)
+                                        {
+                                            <span class="text-danger">
+                                                <i class="bi bi-arrow-down"></i>
+                                                @salaryChange.ToString("C") (@changePercentage.ToString("F1")%
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No Change</span>
+                                        }
+                                    </td>
+                                    <td>@latestChange.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                    <td>@latestChange.ChangedBy</td>
+                                    <td>
+                                        <a asp-page="Details" asp-route-employeeId="@empGroup.Employee.Id" 
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
     </div>
 </div>
-
-<style>
-.hover-card {
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.hover-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
-.card {
-    border: none;
-    border-radius: 15px;
-    background: white;
-}
-.salary-info i {
-    width: 16px;
-}
-#salaryHistorySearch:focus {
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    border-color: #86b7fe;
-}
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    border-radius: 10px;
-}
-.dropdown-item {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-}
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-}
-</style>
-
-<style media="screen and (max-width: 767.98px)">
-.col-md-6.text-md-end {
-    margin-top: 1rem;
-    text-align: left !important;
-}
-</style>
-
-<script>
-document.getElementById('salaryHistorySearch').addEventListener('input', function(e) {
-    const searchTerm = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.salary-history-card');
-    cards.forEach(card => {
-        const content = card.textContent.toLowerCase();
-        card.style.display = content.includes(searchTerm) ? '' : 'none';
-    });
-});
-</script>

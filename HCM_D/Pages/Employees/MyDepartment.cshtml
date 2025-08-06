@@ -1,0 +1,249 @@
+@page
+@model HCM_D.Pages.Employees.MyDepartmentModel
+@{
+    ViewData["Title"] = "My Department";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12">
+            @if (Model.Employee?.Department != null)
+            {
+                <!-- Department Header -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                            <div class="card-body text-white p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-white bg-opacity-25 p-3 rounded-circle me-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="bi bi-building display-4"></i>
+                                            </div>
+                                            <div>
+                                                <h2 class="mb-1 fw-bold">@Model.Employee.Department.Name</h2>
+                                                <p class="mb-1 fs-5 opacity-90">My Department</p>
+                                                <p class="mb-0 opacity-75">
+                                                    <i class="bi bi-person me-1"></i>
+                                                    @Model.Employee.FullName - @Model.Employee.JobTitle
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <div class="d-flex flex-column align-items-md-end">
+                                            <div class="text-center">
+                                                <div class="display-6 fw-bold">@Model.DepartmentEmployeeCount</div>
+                                                <small class="opacity-75">Total Employees</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Overview -->
+                <div class="row mb-4">
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-primary bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-people text-primary display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-primary">@Model.DepartmentEmployeeCount</h4>
+                                <p class="text-muted mb-0">Department Size</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-success bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-currency-dollar text-success display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-success">@Model.DepartmentAverageSalary.ToString("C0")</h4>
+                                <p class="text-muted mb-0">Average Salary</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-info bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-briefcase text-info display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-info">@Model.UniqueJobTitles</h4>
+                                <p class="text-muted mb-0">Different Roles</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Position in Department -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning text-white p-2 rounded me-3">
+                                        <i class="bi bi-person-check"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">My Position in Department</h5>
+                                        <small class="text-muted">Your standing within the department</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-primary bg-opacity-15 p-3 rounded-circle me-3">
+                                                <i class="bi bi-calendar-event text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-muted mb-1">Years in Department</h6>
+                                                <div class="fw-bold">@Model.Employee.YearsOfService.ToString("F1") years</div>
+                                                <small class="text-muted">Since @Model.Employee.HireDate.ToString("MMM yyyy")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-success bg-opacity-15 p-3 rounded-circle me-3">
+                                                <i class="bi bi-currency-dollar text-success"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-muted mb-1">Salary vs Department Avg</h6>
+                                                @{
+                                                    var salaryDiff = Model.Employee.Salary - Model.DepartmentAverageSalary;
+                                                    var isAboveAverage = salaryDiff > 0;
+                                                }
+                                                <div class="fw-bold @(isAboveAverage ? "text-success" : "text-warning")">
+                                                    @(isAboveAverage ? "+" : "")@salaryDiff.ToString("C0")
+                                                </div>
+                                                <small class="text-muted">
+                                                    @(isAboveAverage ? "Above" : "Below") department average
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Colleagues -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 pb-0">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-info text-white p-2 rounded me-3">
+                                            <i class="bi bi-people"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">Department Colleagues</h5>
+                                            <small class="text-muted">People in your department (names and sensitive info hidden)</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.DepartmentColleagues.Any())
+                                {
+                                    <div class="row g-3">
+                                        @foreach (var colleague in Model.DepartmentColleagues.Take(12))
+                                        {
+                                            var isCurrentUser = colleague.Email == Model.Employee.Email;
+                                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                                <div class="card border-0 @(isCurrentUser ? "bg-primary bg-opacity-10" : "bg-light") h-100">
+                                                    <div class="card-body text-center p-3">
+                                                        <div class="bg-@(isCurrentUser ? "primary" : "secondary") bg-opacity-15 p-2 rounded-circle mx-auto mb-2" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                                                            <i class="bi bi-person text-@(isCurrentUser ? "primary" : "secondary")"></i>
+                                                        </div>
+                                                        @if (isCurrentUser)
+                                                        {
+                                                            <h6 class="fw-bold text-primary mb-1">@colleague.FullName (You)</h6>
+                                                        }
+                                                        else
+                                                        {
+                                                            <h6 class="fw-medium mb-1">@colleague.FirstName @colleague.LastName[0].</h6>
+                                                        }
+                                                        <p class="small text-muted mb-0">@colleague.JobTitle</p>
+                                                        <small class="text-muted">@colleague.YearsOfService.ToString("F1") yrs</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    
+                                    @if (Model.DepartmentColleagues.Count > 12)
+                                    {
+                                        <div class="text-center mt-4">
+                                            <p class="text-muted">Showing 12 of @Model.DepartmentColleagues.Count colleagues</p>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="text-center py-4">
+                                        <i class="bi bi-people text-muted display-4"></i>
+                                        <h6 class="text-muted mt-3">You're the only one in this department</h6>
+                                        <p class="text-muted">No other colleagues in your department yet.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- No Department Found -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-building-x text-muted display-1"></i>
+                                <h4 class="text-muted mt-3">Department Not Found</h4>
+                                <p class="text-muted">No department information is available for your profile. Please contact your HR administrator.</p>
+                                <div class="mt-4">
+                                    <a asp-page="/Employees/MyProfile" class="btn btn-primary me-2">
+                                        <i class="bi bi-person-circle me-1"></i>
+                                        View My Profile
+                                    </a>
+                                    <a href="mailto:hr@elevatehr.com" class="btn btn-outline-secondary">
+                                        <i class="bi bi-envelope me-1"></i>
+                                        Contact HR
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.colleague-card {
+    transition: all 0.3s ease;
+}
+
+.colleague-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.current-user-card {
+    border: 2px solid rgba(67, 97, 238, 0.3);
+    background: rgba(67, 97, 238, 0.05);
+}
+</style>

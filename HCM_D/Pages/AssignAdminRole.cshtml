@@ -1,0 +1,89 @@
+@page "/assign-admin-role"
+@model HCM_D.Pages.AssignAdminRoleModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Assign Admin Role";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-shield-exclamation me-2"></i>Admin Role Assignment</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle me-2"></i>
+                            @TempData["Success"]
+                        </div>
+                    }
+
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            @TempData["Error"]
+                        </div>
+                    }
+
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle me-2"></i>Emergency Role Assignment</h6>
+                        <p class="mb-0">Use this page if you're unable to edit employees and need to assign yourself the HR Admin role.</p>
+                    </div>
+
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        var userRoles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+                        var isHRAdmin = user != null && await UserManager.IsInRoleAsync(user, "HR Admin");
+
+                        <div class="mb-4">
+                            <h6>Current User Information</h6>
+                            <table class="table table-sm">
+                                <tr><td><strong>Email:</strong></td><td>@(user?.Email ?? "N/A")</td></tr>
+                                <tr><td><strong>Current Roles:</strong></td><td>@string.Join(", ", userRoles)</td></tr>
+                                <tr><td><strong>Is HR Admin:</strong></td><td><span class="badge @(isHRAdmin ? "bg-success" : "bg-danger")">@isHRAdmin</span></td></tr>
+                            </table>
+                        </div>
+
+                        @if (!isHRAdmin)
+                        {
+                            <form method="post">
+                                <div class="d-grid">
+                                    <button type="submit" name="action" value="assign-admin" class="btn btn-warning btn-lg">
+                                        <i class="bi bi-shield-plus me-2"></i>
+                                        Assign HR Admin Role to My Account
+                                    </button>
+                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle me-2"></i>
+                                <strong>You already have HR Admin role!</strong> You should be able to edit employees.
+                                <br><br>
+                                <a href="/Employees" class="btn btn-primary">Go to Employee Directory</a>
+                                <a href="/debug" class="btn btn-secondary">View Debug Info</a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Please sign in first to assign admin role.
+                        </div>
+                        <a href="/Identity/Account/Login" class="btn btn-primary">Sign In</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

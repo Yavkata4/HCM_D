@@ -4,20 +4,186 @@
     ViewData["Title"] = "Salary History Details";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
-<h2>@ViewData["Title"]</h2>
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">Employee</dt>
-        <dd class="col-sm-10">@Model.SalaryHistory.Employee?.Email</dd>
-        <dt class="col-sm-2">Old Salary</dt>
-        <dd class="col-sm-10">@Model.SalaryHistory.OldSalary</dd>
-        <dt class="col-sm-2">New Salary</dt>
-        <dd class="col-sm-10">@Model.SalaryHistory.NewSalary</dd>
-        <dt class="col-sm-2">Changed On</dt>
-        <dd class="col-sm-10">@Model.SalaryHistory.ChangedOn.ToString("g")</dd>
-        <dt class="col-sm-2">Changed By</dt>
-        <dd class="col-sm-10">@Model.SalaryHistory.ChangedBy</dd>
-    </dl>
-    <a asp-page="Edit" asp-route-id="@Model.SalaryHistory.Id" class="btn btn-primary">Edit</a>
-    <a asp-page="Index" class="btn btn-secondary">Back to List</a>
+
+<div class="container-fluid px-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <!-- Employee Information Card -->
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="salary-avatar me-3">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" 
+                                 style="width: 60px; height: 60px; font-size: 24px;">
+                                @(Model.Employee.FirstName[0])@(Model.Employee.LastName[0])
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="mb-1">@Model.Employee.FirstName @Model.Employee.LastName</h3>
+                            <p class="text-muted mb-1">
+                                <span class="badge bg-primary me-2">@Model.Employee.EmployeeNumber</span>
+                                @Model.Employee.JobTitle
+                            </p>
+                            <p class="text-muted mb-0">@Model.Employee.Department?.Name • @Model.Employee.Email</p>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Current Salary</label>
+                            <div class="fs-4 text-success">@Model.Employee.Salary.ToString("C")</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Total Salary Changes</label>
+                            <div class="fs-4">@Model.SalaryHistories.Count</div>
+                        </div>
+                        @if (Model.SalaryHistories.Any())
+                        {
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Last Change</label>
+                                <div>@Model.SalaryHistories.First().ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Salary History Table -->
+            <div class="card shadow-sm content-glass mb-4">
+                <div class="card-body p-4">
+                    <h4 class="mb-4">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Salary History
+                    </h4>
+                    @if (Model.SalaryHistories == null || Model.SalaryHistories.Count == 0)
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox display-4 text-muted"></i>
+                            <h5 class="text-muted mt-3">No salary changes recorded</h5>
+                            <p class="text-muted">This employee has no salary change history.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped align-middle">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Date Changed</th>
+                                        <th>Old Salary</th>
+                                        <th>New Salary</th>
+                                        <th>Change</th>
+                                        <th>Changed By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var history in Model.SalaryHistories)
+                                    {
+                                        var salaryChange = history.NewSalary - history.OldSalary;
+                                        var changePercentage = history.OldSalary > 0 ? (salaryChange / history.OldSalary) * 100 : 0;
+                                        
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <i class="bi bi-calendar me-2 text-muted"></i>
+                                                    @history.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                                                </div>
+                                            </td>
+                                            <td>@history.OldSalary.ToString("C")</td>
+                                            <td>@history.NewSalary.ToString("C")</td>
+                                            <td>
+                                                @if (salaryChange > 0)
+                                                {
+                                                    <span class="badge bg-success d-flex align-items-center" style="width: fit-content;">
+                                                        <i class="bi bi-arrow-up me-1"></i>
+                                                        +@salaryChange.ToString("C0") (+@changePercentage.ToString("F1")%)
+                                                    </span>
+                                                }
+                                                else if (salaryChange < 0)
+                                                {
+                                                    <span class="badge bg-danger d-flex align-items-center" style="width: fit-content;">
+                                                        <i class="bi bi-arrow-down me-1"></i>
+                                                        @salaryChange.ToString("C0") (@changePercentage.ToString("F1")%)
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary d-flex align-items-center" style="width: fit-content;">
+                                                        <i class="bi bi-dash me-1"></i>
+                                                        No change
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(history.ChangedByEmployeeId) && !string.IsNullOrEmpty(history.ChangedByFullName))
+                                                {
+                                                    <div class="d-flex align-items-start flex-column">
+                                                        <div class="d-flex align-items-center mb-1">
+                                                            <span class="badge bg-secondary me-2">@history.ChangedByEmployeeId</span>
+                                                            <strong>@history.ChangedByFullName</strong>
+                                                        </div>
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-envelope me-1"></i>@history.ChangedByEmail
+                                                        </small>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-person me-2 text-muted"></i>
+                                                        @history.ChangedBy
+                                                    </div>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (Model.SalaryHistories.Count > 1)
+                        {
+                            var firstSalary = Model.SalaryHistories.Last().OldSalary;
+                            var currentSalary = Model.Employee.Salary;
+                            var totalChange = currentSalary - firstSalary;
+                            var totalPercentage = firstSalary > 0 ? (totalChange / firstSalary) * 100 : 0;
+                            
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h6 class="card-title">Total Salary Growth</h6>
+                                            <div class="d-flex align-items-center">
+                                                <span class="me-2">@firstSalary.ToString("C") ? @currentSalary.ToString("C")</span>
+                                                @if (totalChange > 0)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        +@totalChange.ToString("C0") (+@totalPercentage.ToString("F1")%)
+                                                    </span>
+                                                }
+                                                else if (totalChange < 0)
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        @totalChange.ToString("C0") (@totalPercentage.ToString("F1")%)
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <a asp-page="Index" class="btn btn-secondary px-4">
+                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                </a>
+                <a asp-page="Create" class="btn btn-primary px-4 ms-2">
+                    <i class="bi bi-plus-circle me-2"></i>Add Salary Change
+                </a>
+            </div>
+        </div>
+    </div>
 </div>

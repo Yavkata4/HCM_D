@@ -1,0 +1,225 @@
+@page "/company-growth"
+@model HCM_D.Pages.CompanyGrowth.IndexModel
+@{
+    ViewData["Title"] = "Company Growth Analytics";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0"><i class="bi bi-graph-up text-success me-2"></i>Company Growth Analytics</h2>
+                    <p class="text-muted mb-0">Overall company performance and department growth tracking</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <form method="get" class="d-flex align-items-center">
+                        <select name="year" class="form-select me-2" onchange="this.form.submit()">
+                            @foreach (var availableYear in Model.AvailableYears)
+                            {
+                                <option value="@availableYear" selected="@(availableYear == Model.SelectedYear)">@availableYear</option>
+                            }
+                        </select>
+                    </form>
+                    <form method="post" asp-page-handler="CreateSampleData">
+                        <button type="submit" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-circle me-1"></i>Create Sample Data
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Company Overview Cards -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-success bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-currency-dollar text-success display-6"></i>
+                    </div>
+                    <h4 class="fw-bold text-success">@Model.CurrentYearOverview.TotalRevenue.ToString("C0")</h4>
+                    <p class="text-muted mb-0">Total Revenue (@Model.SelectedYear)</p>
+                    @if (Model.PreviousYearOverview.TotalRevenue > 0)
+                    {
+                        var revenueChange = Model.CurrentYearOverview.TotalRevenue - Model.PreviousYearOverview.TotalRevenue;
+                        var revenueChangePercent = Model.PreviousYearOverview.TotalRevenue > 0 ? (revenueChange / Model.PreviousYearOverview.TotalRevenue) * 100 : 0;
+                        <small class="@(revenueChange >= 0 ? "text-success" : "text-danger")">
+                            <i class="bi @(revenueChange >= 0 ? "bi-arrow-up" : "bi-arrow-down")"></i>
+                            @Math.Abs(revenueChangePercent).ToString("F1")% vs @(Model.SelectedYear - 1)
+                        </small>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-warning bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-cash-stack text-warning display-6"></i>
+                    </div>
+                    <h4 class="fw-bold text-warning">@Model.CurrentYearOverview.TotalExpenses.ToString("C0")</h4>
+                    <p class="text-muted mb-0">Total Expenses (@Model.SelectedYear)</p>
+                    @if (Model.PreviousYearOverview.TotalExpenses > 0)
+                    {
+                        var expenseChange = Model.CurrentYearOverview.TotalExpenses - Model.PreviousYearOverview.TotalExpenses;
+                        var expenseChangePercent = Model.PreviousYearOverview.TotalExpenses > 0 ? (expenseChange / Model.PreviousYearOverview.TotalExpenses) * 100 : 0;
+                        <small class="@(expenseChange <= 0 ? "text-success" : "text-danger")">
+                            <i class="bi @(expenseChange <= 0 ? "bi-arrow-down" : "bi-arrow-up")"></i>
+                            @Math.Abs(expenseChangePercent).ToString("F1")% vs @(Model.SelectedYear - 1)
+                        </small>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-primary bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-graph-up-arrow text-primary display-6"></i>
+                    </div>
+                    <h4 class="fw-bold text-primary">@Model.CurrentYearOverview.TotalNetProfit.ToString("C0")</h4>
+                    <p class="text-muted mb-0">Net Profit (@Model.SelectedYear)</p>
+                    <small class="@(Model.CurrentYearOverview.OverallProfitMargin >= 0 ? "text-success" : "text-danger")">
+                        @Model.CurrentYearOverview.OverallProfitMargin.ToString("F1")% Profit Margin
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-center">
+                    <div class="bg-info bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-people text-info display-6"></i>
+                    </div>
+                    <h4 class="fw-bold text-info">@Model.CurrentYearOverview.NumberOfEmployees</h4>
+                    <p class="text-muted mb-0">Total Employees</p>
+                    <small class="text-muted">Across @Model.CurrentYearOverview.NumberOfDepartments departments</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Growth Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="mb-0">Department Performance - @Model.SelectedYear</h5>
+                    <small class="text-muted">Revenue, expenses, and growth by department</small>
+                </div>
+                <div class="card-body">
+                    @if (Model.DepartmentGrowthData.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Department</th>
+                                        <th class="text-end">Revenue</th>
+                                        <th class="text-end">Expenses</th>
+                                        <th class="text-end">Net Profit</th>
+                                        <th class="text-end">Profit Margin</th>
+                                        <th class="text-end">Goal</th>
+                                        <th class="text-end">Goal Achievement</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var dept in Model.DepartmentGrowthData)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-primary bg-opacity-15 p-2 rounded-circle me-3">
+                                                        <i class="bi bi-building text-primary"></i>
+                                                    </div>
+                                                    <strong>@dept.DepartmentName</strong>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="fw-medium text-success">@dept.Revenue.ToString("C0")</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="fw-medium text-warning">@dept.Expenses.ToString("C0")</span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="fw-bold @(dept.NetProfit >= 0 ? "text-success" : "text-danger")">
+                                                    @dept.NetProfit.ToString("C0")
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge @(dept.ProfitMargin >= 20 ? "bg-success" : dept.ProfitMargin >= 10 ? "bg-warning" : "bg-danger")">
+                                                    @dept.ProfitMargin.ToString("F1")%
+                                                </span>
+                                            </td>
+                                            <td class="text-end">
+                                                @if (dept.DepartmentGoal.HasValue)
+                                                {
+                                                    <span class="text-muted">@dept.DepartmentGoal.Value.ToString("C0")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Not set</span>
+                                                }
+                                            </td>
+                                            <td class="text-end">
+                                                @if (dept.GoalAchievement.HasValue)
+                                                {
+                                                    <span class="badge @(dept.GoalAchievement >= 100 ? "bg-success" : dept.GoalAchievement >= 80 ? "bg-warning" : "bg-danger")">
+                                                        @dept.GoalAchievement.Value.ToString("F1")%
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">-</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-graph-up text-muted display-1"></i>
+                            <h5 class="text-muted mt-3">No Growth Data Available</h5>
+                            <p class="text-muted">No department growth data found for @Model.SelectedYear.</p>
+                            <form method="post" asp-page-handler="CreateSampleData" class="d-inline">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle me-2"></i>Create Sample Data
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-hover:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+</style>

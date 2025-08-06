@@ -1,13 +1,17 @@
 @{
     Layout = null;
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - NovaHR Solutions</title>
+    <title>@ViewData["Title"] - ElevateHR Solutions</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <link rel="stylesheet" href="~/css/modern-layout.css" asp-append-version="true" />
@@ -19,7 +23,7 @@
             <div class="container-fluid px-4">
                 <a class="navbar-brand" asp-page="/Index">
                     <i class="bi bi-bar-chart-line"></i>
-                    NovaHR
+                    ElevateHR
                 </a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
@@ -28,33 +32,90 @@
 
                 <div class="collapse navbar-collapse" id="mainNav">
                     <ul class="navbar-nav mx-auto">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" asp-page="/Index" role="button">
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
-                                Workforce <i class="bi bi-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-page="/Employees/Index">Employee Directory</a></li>
-                                <li><a class="dropdown-item" asp-page="/Departments/Index">Departments</a></li>
-                                <li><a class="dropdown-item" asp-page="/SalaryHistories/Index">Salary Records</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
-                                Reports <i class="bi bi-chevron-down"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-page="/Departments/Report">Department Reports</a></li>
-                                <li><a class="dropdown-item" href="#">Salary Analytics</a></li>
-                                <li><a class="dropdown-item" href="#">Employee Statistics</a></li>
-                            </ul>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+                            var isHRAdmin = user != null && await UserManager.IsInRoleAsync(user, "HR Admin");
+                            var isManager = user != null && await UserManager.IsInRoleAsync(user, "Manager");
+                            var isEmployee = user != null && await UserManager.IsInRoleAsync(user, "Employee");
+
+                            @if (isEmployee && !isManager && !isHRAdmin)
+                            {
+                                <!-- Employee-only navigation -->
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">
+                                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Employees/MyProfile" ? "active" : "")" asp-page="/Employees/MyProfile">
+                                        <i class="bi bi-person-circle me-1"></i>My Profile
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/SalaryHistories/") == true ? "active" : "")" asp-page="/SalaryHistories/MyHistory">
+                                        <i class="bi bi-clock-history me-1"></i>My Salary History
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <!-- Manager and HR Admin navigation -->
+                                <li class="nav-item">
+                                    <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">
+                                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Employees/") == true || ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Departments/Index") == true || ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/SalaryHistories/") == true ? "active" : "")" 
+                                       href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-people me-1"></i>Workforce
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString() == "/Employees/Index" ? "active" : "")" asp-page="/Employees/Index">
+                                            <i class="bi bi-person-lines-fill me-2"></i>Employee Directory</a></li>
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString() == "/Departments/Index" ? "active" : "")" asp-page="/Departments/Index">
+                                            <i class="bi bi-building me-2"></i>Departments</a></li>
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/SalaryHistories/") == true ? "active" : "")" asp-page="/SalaryHistories/Index">
+                                            <i class="bi bi-clock-history me-2"></i>Salary Records</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Departments/EmployeeStatistics") == true || ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Departments/Report") == true || ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/Departments/SalaryAnalytics") == true || ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/CompanyGrowth/") == true ? "active" : "")" 
+                                       href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-graph-up me-1"></i>Reports
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString() == "/Departments/EmployeeStatistics" ? "active" : "")" asp-page="/Departments/EmployeeStatistics">
+                                            <i class="bi bi-bar-chart-line me-2"></i>Employee Statistics</a></li>
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString() == "/Departments/Report" ? "active" : "")" asp-page="/Departments/Report">
+                                            <i class="bi bi-file-earmark-bar-graph me-2"></i>Department Reports</a></li>
+                                        <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString() == "/Departments/SalaryAnalytics" ? "active" : "")" asp-page="/Departments/SalaryAnalytics">
+                                            <i class="bi bi-currency-dollar me-2"></i>Salary Analytics</a></li>
+                                        @if (isHRAdmin)
+                                        {
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item @(ViewContext.RouteData.Values["page"]?.ToString()?.Contains("/CompanyGrowth/") == true ? "active" : "")" asp-page="/CompanyGrowth/Index">
+                                                <i class="bi bi-graph-up-arrow me-2"></i>Company Growth Analytics</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <!-- Not signed in navigation -->
+                            <li class="nav-item">
+                                <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Index" ? "active" : "")" asp-page="/Index">
+                                    <i class="bi bi-speedometer2 me-1"></i>Home
+                                </a>
+                            </li>
+                        }
+                        
                         <li class="nav-item">
-                            <a class="nav-link" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link @(ViewContext.RouteData.Values["page"]?.ToString() == "/Privacy" ? "active" : "")" asp-page="/Privacy">
+                                <i class="bi bi-shield-lock me-1"></i>Privacy
+                            </a>
                         </li>
                     </ul>
 
@@ -82,7 +143,7 @@
         <footer class="footer">
             <div class="container-fluid px-4">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span>&copy; @DateTime.Now.Year NovaHR Solutions</span>
+                    <span>&copy; @DateTime.Now.Year ElevateHR Solutions</span>
                     <a asp-page="/Privacy">Privacy Policy</a>
                 </div>
             </div>
@@ -93,22 +154,9 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Handle active navigation state
-            const currentPath = window.location.pathname;
-            document.querySelectorAll('.nav-link').forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('active');
-                    const dropdownParent = link.closest('.dropdown-menu');
-                    if (dropdownParent) {
-                        dropdownParent.previousElementSibling?.classList.add('active');
-                    }
-                }
-            });
-
             // Handle navbar background on scroll
             const header = document.querySelector('.main-header');
-            let lastScroll = 0;
-
+            
             const handleScroll = () => {
                 const currentScroll = window.scrollY;
                 if (currentScroll > 50) {
@@ -116,11 +164,28 @@
                 } else {
                     header.classList.remove('scrolled');
                 }
-                lastScroll = currentScroll;
             };
 
             window.addEventListener('scroll', handleScroll);
             handleScroll();
+
+            // Initialize Bootstrap dropdowns properly
+            const dropdowns = document.querySelectorAll('[data-bs-toggle="dropdown"]');
+            dropdowns.forEach(dropdown => {
+                new bootstrap.Dropdown(dropdown);
+            });
+
+            // Add smooth hover animations for dropdown items
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            dropdownItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateX(5px)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateX(0)';
+                });
+            });
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

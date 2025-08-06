@@ -13,6 +13,20 @@
                     <h3 class="mb-4">Employee Details</h3>
                     <div class="row g-3">
                         <div class="col-md-6">
+                            <label class="form-label fw-bold">Employee Number</label>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-badge-cc me-2 text-primary"></i>
+                                <span class="badge bg-primary">@Model.Employee.EmployeeNumber</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Hire Date</label>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-calendar-event me-2 text-success"></i>
+                                @Model.Employee.HireDate.ToString("MMMM dd, yyyy")
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label fw-bold">First Name</label>
                             <div>@Model.Employee.FirstName</div>
                         </div>
@@ -36,6 +50,13 @@
                             <label class="form-label fw-bold">Department</label>
                             <div>@Model.Employee.Department?.Name</div>
                         </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Years of Service</label>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-clock-history me-2 text-info"></i>
+                                @Model.Employee.YearsOfService.ToString("F1") years
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,6 +76,7 @@
                                         <th>Date Changed</th>
                                         <th>Old Salary</th>
                                         <th>New Salary</th>
+                                        <th>Changed By</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -64,6 +86,21 @@
                                             <td>@history.ChangedOn.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
                                             <td>@history.OldSalary.ToString("C")</td>
                                             <td>@history.NewSalary.ToString("C")</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(history.ChangedByEmployeeId) && !string.IsNullOrEmpty(history.ChangedByFullName))
+                                                {
+                                                    <div>
+                                                        <span class="badge bg-secondary me-2">@history.ChangedByEmployeeId</span>
+                                                        <strong>@history.ChangedByFullName</strong>
+                                                        <br />
+                                                        <small class="text-muted">@history.ChangedByEmail</small>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span>@history.ChangedBy</span>
+                                                }
+                                            </td>
                                         </tr>
                                     }
                                 </tbody>

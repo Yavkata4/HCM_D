@@ -1,0 +1,350 @@
+@page
+@model HCM_D.Pages.Departments.EmployeeStatisticsModel
+@{
+    ViewData["Title"] = Model.IsManager ? $"{Model.DepartmentName} Employee Statistics" : "Employee Statistics";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    @if (Model.IsManager)
+                    {
+                        <h2 class="mb-0">
+                            <i class="bi bi-bar-chart text-info me-2"></i>
+                            @Model.DepartmentName Employee Statistics
+                        </h2>
+                        <p class="text-muted mb-0">Employee demographics and distribution for your department</p>
+                    }
+                    else
+                    {
+                        <h2 class="mb-0">
+                            <i class="bi bi-bar-chart text-info me-2"></i>
+                            Employee Statistics
+                        </h2>
+                        <p class="text-muted mb-0">Employee demographics and distribution across the organization</p>
+                    }
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="text-muted">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        @DateTime.Now.ToString("MMM dd, yyyy")
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="exportData()">
+                            <i class="bi bi-download me-1"></i>Export
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.print()">
+                            <i class="bi bi-printer me-1"></i>Print
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.IsManager && !string.IsNullOrEmpty(Model.DepartmentName))
+    {
+        <div class="alert alert-info mb-4">
+            <i class="bi bi-info-circle me-2"></i>
+            <strong>Manager Statistics:</strong> This analysis shows employee data for the @Model.DepartmentName department only.
+        </div>
+    }
+
+    <!-- Summary Statistics -->
+    <div class="row mb-5">
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-gradient"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="fs-6 fw-light opacity-75">
+                                @if (Model.IsManager)
+                                {
+                                    <span>Department Employees</span>
+                                }
+                                else
+                                {
+                                    <span>Total Employees</span>
+                                }
+                            </div>
+                            <div class="display-4 fw-bold">@Model.TotalEmployees</div>
+                            <small class="opacity-75">
+                                @if (Model.IsManager)
+                                {
+                                    <span>In your department</span>
+                                }
+                                else
+                                {
+                                    <span>Across organization</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="bg-white bg-opacity-25 p-3 rounded-circle">
+                            <i class="bi bi-people-fill display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-gradient"
+                style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="fs-6 fw-light opacity-75">Average Salary</div>
+                            <div class="display-4 fw-bold">@Model.AverageSalary.ToString("C0")</div>
+                            <small class="opacity-75">
+                                @if (Model.IsManager)
+                                {
+                                    <span>Department average</span>
+                                }
+                                else
+                                {
+                                    <span>Company average</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="bg-white bg-opacity-25 p-3 rounded-circle">
+                            <i class="bi bi-currency-dollar display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-gradient"
+                style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="fs-6 fw-light opacity-75">Highest Salary</div>
+                            <div class="display-4 fw-bold">@Model.HighestSalary.ToString("C0")</div>
+                            <small class="opacity-75">
+                                @if (Model.IsManager)
+                                {
+                                    <span>Peak in department</span>
+                                }
+                                else
+                                {
+                                    <span>Peak compensation</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="bg-white bg-opacity-25 p-3 rounded-circle">
+                            <i class="bi bi-arrow-up-circle-fill display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+            <div class="card h-100 border-0 shadow-sm bg-gradient"
+                style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <div class="card-body text-white">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <div class="fs-6 fw-light opacity-75">Lowest Salary</div>
+                            <div class="display-4 fw-bold">@Model.LowestSalary.ToString("C0")</div>
+                            <small class="opacity-75">
+                                @if (Model.IsManager)
+                                {
+                                    <span>Minimum in department</span>
+                                }
+                                else
+                                {
+                                    <span>Minimum compensation</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="bg-white bg-opacity-25 p-3 rounded-circle">
+                            <i class="bi bi-arrow-down-circle-fill display-6"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts and Statistics -->
+    <div class="row">
+        <!-- Department Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pb-0">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary text-white p-2 rounded me-3">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <div>
+                            @if (Model.IsManager)
+                            {
+                                <h5 class="mb-0">Department Overview</h5>
+                                <small class="text-muted">Your department structure</small>
+                            }
+                            else
+                            {
+                                <h5 class="mb-0">Department Distribution</h5>
+                                <small class="text-muted">Employee distribution across departments</small>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.DepartmentCounts.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-borderless align-middle">
+                                <tbody>
+                                    @foreach (var dept in Model.DepartmentCounts)
+                                    {
+                                        var percentage = Model.TotalEmployees > 0 ? (dept.Count * 100.0) / Model.TotalEmployees : 0;
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                        style="width: 32px; height: 32px;">
+                                                        <i class="bi bi-building"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold">@dept.Name</div>
+                                                        <small class="text-muted">@percentage.ToString("F1")% of @(Model.IsManager ? "department" : "organization")</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge bg-primary fs-6">@dept.Count</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-building text-muted display-4"></i>
+                            <p class="text-muted mt-2">No department data available</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Title Distribution -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pb-0">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-success text-white p-2 rounded me-3">
+                            <i class="bi bi-person-badge"></i>
+                        </div>
+                        <div>
+                            @if (Model.IsManager)
+                            {
+                                <h5 class="mb-0">Department Job Titles</h5>
+                                <small class="text-muted">Role distribution in your department</small>
+                            }
+                            else
+                            {
+                                <h5 class="mb-0">Job Title Distribution</h5>
+                                <small class="text-muted">Role distribution across the organization</small>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.JobTitleCounts.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-borderless align-middle">
+                                <tbody>
+                                    @foreach (var job in Model.JobTitleCounts.Take(10))
+                                    {
+                                        var percentage = Model.TotalEmployees > 0 ? (job.Count * 100.0) / Model.TotalEmployees : 0;
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                                                        style="width: 32px; height: 32px;">
+                                                        <i class="bi bi-person-badge"></i>
+                                                    </div>
+                                                    <div>
+                                                        <div class="fw-bold">@job.Title</div>
+                                                        <small class="text-muted">@percentage.ToString("F1")% of @(Model.IsManager ? "department" : "workforce")</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge bg-success fs-6">@job.Count</span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-person-badge text-muted display-4"></i>
+                            <p class="text-muted mt-2">No job title data available</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function exportData() {
+            // Create CSV data
+            let csvContent = "data:text/csv;charset=utf-8,;
+            
+            // Add header
+            csvContent += "@(Model.IsManager ? Model.DepartmentName + " Department" : "Employee") Statistics Report\n";
+            csvContent += "Generated on: @DateTime.Now.ToString("yyyy-MM-dd HH:mm")\n\n";
+            
+            // Add summary
+            csvContent += "Summary Statistics\n";
+            csvContent += "Total Employees,@Model.TotalEmployees\n";
+            csvContent += "Average Salary,@Model.AverageSalary.ToString("F2")\n";
+            csvContent += "Highest Salary,@Model.HighestSalary.ToString("F2")\n";
+            csvContent += "Lowest Salary,@Model.LowestSalary.ToString("F2")\n\n";
+            
+            // Add department distribution
+            csvContent += "Department Distribution\n";
+            csvContent += "Department,Count,Percentage\n";
+            @foreach (var dept in Model.DepartmentCounts)
+            {
+                var percentage = Model.TotalEmployees > 0 ? (dept.Count * 100.0) / Model.TotalEmployees : 0;
+                <text>csvContent += "@dept.Name,@dept.Count,@percentage.ToString("F1")\n";</text>
+            }
+            
+            csvContent += "\nJob Title Distribution\n";
+            csvContent += "Job Title,Count,Percentage\n";
+            @foreach (var job in Model.JobTitleCounts)
+            {
+                var percentage = Model.TotalEmployees > 0 ? (job.Count * 100.0) / Model.TotalEmployees : 0;
+                <text>csvContent += "@job.Title,@job.Count,@percentage.ToString("F1")\n";</text>
+            }
+
+            // Create and download file
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "@(Model.IsManager ? Model.DepartmentName + "_employee" : "employee")_statistics.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+}

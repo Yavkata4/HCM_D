@@ -1,143 +1,345 @@
 ﻿@page
 @model HCM_D.Pages.Departments.IndexModel
+@using HCM_D.Models
 @{
     ViewData["Title"] = "Departments";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 py-4">
+    <!-- Header Section -->
     <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="d-flex align-items-center">
-                <div class="position-relative">
-                    <i class="bi bi-search position-absolute ps-3"
-                       style="top: 50%; transform: translateY(-50%);"></i>
-                    <input type="text" id="departmentSearch" class="form-control ps-5"
-                           placeholder="Search departments..."
-                           style="padding-left: 2.5rem; border-radius: 20px;">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <div class="mb-3 mb-md-0">
+                    <h2 class="mb-0">
+                        <i class="bi bi-building text-primary me-2"></i>
+                        Departments
+                    </h2>
+                    <p class="text-muted mb-0">Manage organizational departments and structures</p>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <div class="position-relative">
+                        <i class="bi bi-search position-absolute ps-3 text-muted" style="top: 50%; transform: translateY(-50%);"></i>
+                        <input type="text" id="departmentSearch" class="form-control ps-5" 
+                               placeholder="Search departments..." style="min-width: 250px;">
+                    </div>
+                    <a asp-page="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Add Department
+                    </a>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6 text-md-end">
-            <a asp-page="Create" class="btn btn-primary"
-               style="border-radius: 20px;">
-                <i class="bi bi-building-add"></i> Add Department
-            </a>
         </div>
     </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     }
 
-    <div class="row g-4">
-        @foreach (var dept in Model.Departments)
-        {
-            <div class="col-xl-3 col-lg-4 col-md-6 department-card">
-                <div class="card h-100 shadow-sm hover-card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div class="department-avatar">
-                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center"
-                                     style="width: 48px; height: 48px; font-size: 20px;">
-                                    <i class="bi bi-building"></i>
-                                </div>
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Departments?.Any() == true)
+    {
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="card-body text-white">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="fs-6 fw-light opacity-75">Total Departments</div>
+                                <div class="display-6 fw-bold">@Model.Departments.Count()</div>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-link text-dark p-0" data-bs-toggle="dropdown">
-                                    <i class="bi bi-three-dots-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Details" asp-route-id="@dept.Id">
-                                            <i class="bi bi-eye me-2"></i> View Details
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-page="Edit" asp-route-id="@dept.Id">
-                                            <i class="bi bi-pencil me-2"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@dept.Id">
-                                            <i class="bi bi-trash me-2"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="bg-white bg-opacity-25 p-2 rounded-circle">
+                                <i class="bi bi-building display-6"></i>
                             </div>
-                        </div>
-                        <h5 class="card-title mb-1">@dept.Name</h5>
-                        <p class="text-muted small mb-2">Department</p>
-                        <div class="department-info mt-3">
-                            <p class="mb-2 d-flex align-items-center">
-                                <i class="bi bi-people me-2 text-muted"></i>
-                                <span class="small">@((dept.Employees?.Count ?? 0)) Employees</span>
-                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-        }
-    </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <div class="card-body text-white">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="fs-6 fw-light opacity-75">Total Employees</div>
+                                <div class="display-6 fw-bold">@Model.Departments.Sum(d => d.Employees?.Count ?? 0)</div>
+                            </div>
+                            <div class="bg-white bg-opacity-25 p-2 rounded-circle">
+                                <i class="bi bi-people-fill display-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="card-body text-white">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="fs-6 fw-light opacity-75">Average Size</div>
+                                @{
+                                    var avgSize = Model.Departments.Count() > 0 ? Model.Departments.Average(d => d.Employees?.Count ?? 0) : 0;
+                                }
+                                <div class="display-6 fw-bold">@avgSize.ToString("F0")</div>
+                            </div>
+                            <div class="bg-white bg-opacity-25 p-2 rounded-circle">
+                                <i class="bi bi-bar-chart-fill display-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-lg-6 col-md-6 mb-3">
+                <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="card-body text-white">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <div class="fs-6 fw-light opacity-75">Largest Dept</div>
+                                @{
+                                    var largestDept = Model.Departments.OrderByDescending(d => d.Employees?.Count ?? 0).FirstOrDefault();
+                                }
+                                <div class="display-6 fw-bold">@((largestDept?.Employees?.Count ?? 0))</div>
+                            </div>
+                            <div class="bg-white bg-opacity-25 p-2 rounded-circle">
+                                <i class="bi bi-trophy-fill display-6"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">
+                            <i class="bi bi-lightning-charge me-2 text-warning"></i>
+                            Quick Actions
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-lg-3 col-md-6">
+                                <a asp-page="/Departments/EmployeeStatistics" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-graph-up me-2"></i>
+                                    Employee Statistics
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a asp-page="/Departments/SalaryAnalytics" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-currency-dollar me-2"></i>
+                                    Salary Analytics
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a asp-page="/Departments/Report" class="btn btn-outline-info w-100">
+                                    <i class="bi bi-file-earmark-bar-graph me-2"></i>
+                                    Department Report
+                                </a>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <a asp-page="/Employees/Index" class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-people me-2"></i>
+                                    All Employees
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Departments Grid -->
+        <div class="row g-4" id="departmentsGrid">
+            @foreach (var dept in Model.Departments.OrderByDescending(d => d.Employees?.Count ?? 0))
+            {
+                var employeeCount = dept.Employees?.Count ?? 0;
+                var salaries = dept.Employees?.Select(e => e.Salary).ToList() ?? new List<decimal>();
+                var totalSalary = salaries.Sum();
+                var avgSalary = salaries.Count > 0 ? salaries.Average() : 0;
+                
+                <div class="col-xl-4 col-lg-6 col-md-6 department-card">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="card-header bg-gradient text-white border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-white bg-opacity-25 p-2 rounded-circle me-3">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">@dept.Name</h6>
+                                        <small class="opacity-75">Department</small>
+                                    </div>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-link text-white p-0" data-bs-toggle="dropdown">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" asp-page="Details" asp-route-id="@dept.Id">
+                                                <i class="bi bi-eye me-2"></i>View Details
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-page="Edit" asp-route-id="@dept.Id">
+                                                <i class="bi bi-pencil me-2"></i>Edit
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" asp-page="Delete" asp-route-id="@dept.Id">
+                                                <i class="bi bi-trash me-2"></i>Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3 mb-3">
+                                <div class="col-6">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="fw-bold text-primary h5 mb-1">@employeeCount</div>
+                                        <small class="text-muted">Employees</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-center p-2 bg-light rounded">
+                                        <div class="fw-bold text-success h5 mb-1">@totalSalary.ToString("C0")</div>
+                                        <small class="text-muted">Total Payroll</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @if (employeeCount > 0)
+                            {
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <small class="text-muted">Average Salary</small>
+                                        <small class="fw-bold">@avgSalary.ToString("C0")</small>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        @{
+                                            var allEmployees = Model.Departments.Where(d => d.Employees != null).SelectMany(d => d.Employees);
+                                            var maxSalary = allEmployees.Any() ? allEmployees.Max(e => e.Salary) : 0;
+                                            var progressWidth = maxSalary > 0 ? ((double)avgSalary / (double)maxSalary) * 100 : 0;
+                                        }
+                                        <div class="progress-bar bg-gradient" style="width: @progressWidth.ToString("F1")%; background: linear-gradient(90deg, #4facfe, #00f2fe);"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap gap-1 mb-3">
+                                    @if (dept.Employees != null)
+                                    {
+                                        @foreach (var jobTitle in dept.Employees.GroupBy(e => e.JobTitle).Take(3))
+                                        {
+                                            <span class="badge bg-secondary">@jobTitle.Key (@jobTitle.Count())</span>
+                                        }
+                                        @if (dept.Employees.GroupBy(e => e.JobTitle).Count() > 3)
+                                        {
+                                            <span class="badge bg-light text-dark">+@(dept.Employees.GroupBy(e => e.JobTitle).Count() - 3) more</span>
+                                        }
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-center py-3">
+                                    <i class="bi bi-people text-muted display-6"></i>
+                                    <p class="text-muted mt-2 mb-0">No employees assigned</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a asp-page="Details" asp-route-id="@dept.Id" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-arrow-right me-1"></i>
+                                View Department
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- Empty State -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-building text-muted display-1"></i>
+                        <h4 class="text-muted mt-3">No Departments Found</h4>
+                        <p class="text-muted">Get started by creating your first department to organize your workforce.</p>
+                        <a asp-page="Create" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Create First Department
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
-<style>
-    .hover-card {
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .hover-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-    }
-
-    .card {
-        border: none;
-        border-radius: 15px;
-        background: white;
-    }
-
-    .department-info i {
-        width: 16px;
-    }
-
-    #departmentSearch:focus {
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-        border-color: #86b7fe;
-    }
-
-    .dropdown-menu {
-        border: none;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        border-radius: 10px;
-    }
-
-    .dropdown-item {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .dropdown-item:hover {
-        background-color: #f8f9fa;
-    }
-</style>
-
-<style media="screen and (max-width: 767.98px)">
-    .col-md-6.text-md-end {
-        margin-top: 1rem;
-        text-align: left !important;
-    }
-</style>
-
-<script>
-    document.getElementById('departmentSearch').addEventListener('input', function (e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.department-card');
-        cards.forEach(card => {
-            const content = card.textContent.toLowerCase();
-            card.style.display = content.includes(searchTerm) ? '' : 'none';
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('departmentSearch');
+            const departmentCards = document.querySelectorAll('.department-card');
+            
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+                
+                departmentCards.forEach(card => {
+                    const cardContent = card.textContent.toLowerCase();
+                    const shouldShow = searchTerm === '' || cardContent.includes(searchTerm);
+                    
+                    if (shouldShow) {
+                        card.style.display = '';
+                        card.classList.add('fade-in');
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('fade-in');
+                    }
+                });
+                
+                // Show no results message if needed
+                const visibleCards = Array.from(departmentCards).filter(card => card.style.display !== 'none');
+                const grid = document.getElementById('departmentsGrid');
+                
+                let noResultsMsg = document.getElementById('no-results-message');
+                if (visibleCards.length === 0 && searchTerm !== '') {
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.id = 'no-results-message';
+                        noResultsMsg.className = 'col-12 text-center py-5';
+                        noResultsMsg.innerHTML = `
+                            <i class="bi bi-search text-muted display-1"></i>
+                            <h4 class="text-muted mt-3">No departments found</h4>
+                            <p class="text-muted">Try adjusting your search terms</p>
+                        `;
+                        grid.appendChild(noResultsMsg);
+                    }
+                } else if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            });
         });
-    });
-</script>
+    </script>
+}

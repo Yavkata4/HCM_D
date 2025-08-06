@@ -1,0 +1,217 @@
+@page
+@model HCM_D.Pages.SalaryHistories.MyHistoryModel
+@{
+    ViewData["Title"] = "My Salary History";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12">
+            @if (Model.Employee != null)
+            {
+                <!-- Header Card -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                            <div class="card-body text-white p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <div class="d-flex align-items-center">
+                                            <div class="bg-white bg-opacity-25 p-3 rounded-circle me-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="bi bi-clock-history display-4"></i>
+                                            </div>
+                                            <div>
+                                                <h2 class="mb-1 fw-bold">My Salary History</h2>
+                                                <p class="mb-1 fs-5 opacity-90">@Model.Employee.FullName</p>
+                                                <p class="mb-0 opacity-75">
+                                                    <i class="bi bi-briefcase me-1"></i>
+                                                    @Model.Employee.JobTitle
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-md-end">
+                                        <div class="d-flex flex-column align-items-md-end">
+                                            <div class="text-center">
+                                                <div class="display-6 fw-bold">@Model.Employee.Salary.ToString("C0")</div>
+                                                <small class="opacity-75">Current Salary</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salary Overview -->
+                <div class="row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-success bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-currency-dollar text-success display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-success">@Model.Employee.Salary.ToString("C0")</h4>
+                                <p class="text-muted mb-0">Current Salary</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-info bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-calendar-month text-info display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-info">@((Model.Employee.Salary / 12).ToString("C0"))</h4>
+                                <p class="text-muted mb-0">Monthly</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-warning bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-calendar-week text-warning display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-warning">@((Model.Employee.Salary / 52).ToString("C0"))</h4>
+                                <p class="text-muted mb-0">Weekly</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-3">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body text-center">
+                                <div class="bg-primary bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-clock-history text-primary display-6"></i>
+                                </div>
+                                <h4 class="fw-bold text-primary">@Model.SalaryHistories.Count</h4>
+                                <p class="text-muted mb-0">Salary Changes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salary History Card View -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 pb-0">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary text-white p-2 rounded me-3">
+                                        <i class="bi bi-clock-history"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-0">Salary History</h5>
+                                        <small class="text-muted">Your salary changes over time</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                @if (Model.SalaryHistories.Any())
+                                {
+                                    <div class="row">
+                                        @foreach (var history in Model.SalaryHistories)
+                                        {
+                                            var isIncrease = history.NewSalary > history.OldSalary;
+                                            var changeAmount = Math.Abs(history.SalaryChange);
+                                            var changePercent = Math.Abs(history.ChangePercentage);
+                                            
+                                            <div class="col-md-6 mb-4">
+                                                <div class="card border-0 shadow-sm">
+                                                    <div class="card-body">
+                                                        <div class="row align-items-center">
+                                                            <div class="col-12">
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div>
+                                                                        <h6 class="text-muted mb-1">Date & Time</h6>
+                                                                        <p class="fw-medium mb-0">@history.ChangedOn.ToLocalTime().ToString("MMM dd, yyyy")</p>
+                                                                        <small class="text-muted">@history.ChangedOn.ToLocalTime().ToString("HH:mm")</small>
+                                                                    </div>
+                                                                    <div class="text-end">
+                                                                        <div class="fs-5 fw-bold @(isIncrease ? "text-success" : "text-warning")">
+                                                                            @if (isIncrease)
+                                                                            {
+                                                                                <i class="bi bi-arrow-up"></i>
+                                                                                @history.NewSalary.ToString("C0")
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <i class="bi bi-arrow-down"></i>
+                                                                                @history.NewSalary.ToString("C0")
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <h6 class="text-muted mb-1">Change Details</h6>
+                                                                <p class="mb-0">
+                                                                    From <span class="fw-semibold">@history.OldSalary.ToString("C0")</span> 
+                                                                    to <span class="fw-semibold @(isIncrease ? "text-success" : "text-warning")">@history.NewSalary.ToString("C0")</span>
+                                                                </p>
+                                                                <p class="mb-0 small">
+                                                                    (@(isIncrease ? "+" : "-")@changeAmount.ToString("C0") 
+                                                                    / @(changePercent.ToString("F1"))%)
+                                                                </p>
+                                                            </div>
+                                                            <div class="col-12">
+                                                                <h6 class="text-muted mb-1">Updated By</h6>
+                                                                <p class="mb-0">@history.ChangedByFullName</p>
+                                                                <small class="text-muted">@history.ChangedByEmail</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="text-center py-5">
+                                        <i class="bi bi-clock-history text-muted display-1"></i>
+                                        <h4 class="text-muted mt-3">No Salary History</h4>
+                                        <p class="text-muted">Your salary hasn't been changed since you started. Your current salary was set when you joined the company.</p>
+                                        <div class="mt-4">
+                                            <a asp-page="/Employees/MyProfile" class="btn btn-primary">
+                                                <i class="bi bi-person-circle me-1"></i>
+                                                View My Profile
+                                            </a>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <!-- No Employee Found -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="bi bi-person-x text-muted display-1"></i>
+                                <h4 class="text-muted mt-3">Profile Not Found</h4>
+                                <p class="text-muted">No employee profile is associated with your account. Please contact your HR administrator.</p>
+                                <div class="mt-4">
+                                    <a asp-page="/Index" class="btn btn-primary me-2">
+                                        <i class="bi bi-house me-1"></i>
+                                        Go to Dashboard
+                                    </a>
+                                    <a href="mailto:hr@elevatehr.com" class="btn btn-outline-secondary">
+                                        <i class="bi bi-envelope me-1"></i>
+                                        Contact HR
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

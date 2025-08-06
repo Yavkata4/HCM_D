@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace HCM_D.Pages.SalaryHistories
@@ -13,11 +15,23 @@ namespace HCM_D.Pages.SalaryHistories
     {
         private readonly ApplicationDbContext _context;
         public DetailsModel(ApplicationDbContext context) => _context = context;
-        public SalaryHistory SalaryHistory { get; set; } = new();
-        public async Task<IActionResult> OnGetAsync(int id)
+        
+        public Employee Employee { get; set; } = new();
+        public List<SalaryHistory> SalaryHistories { get; set; } = new();
+        
+        public async Task<IActionResult> OnGetAsync(int employeeId)
         {
-            SalaryHistory = await _context.SalaryHistories.Include(s => s.Employee).FirstOrDefaultAsync(s => s.Id == id);
-            if (SalaryHistory == null) return NotFound();
+            Employee = await _context.Employees
+                .Include(e => e.Department)
+                .FirstOrDefaultAsync(e => e.Id == employeeId);
+                
+            if (Employee == null) return NotFound();
+            
+            SalaryHistories = await _context.SalaryHistories
+                .Where(sh => sh.EmployeeId == employeeId)
+                .OrderByDescending(sh => sh.ChangedOn)
+                .ToListAsync();
+                
             return Page();
         }
     }

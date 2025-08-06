@@ -1,0 +1,159 @@
+@page "/debug"
+@model HCM_D.Pages.DebugModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Title"] = "Debug Information";
+    Layout = "~/Pages/Shared/_ModernLayout.cshtml";
+}
+
+<div class="container-fluid px-4 py-4">
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="bi bi-bug me-2"></i>Debug Information</h4>
+                </div>
+                <div class="card-body">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        var userRoles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+                        var isHRAdmin = user != null && await UserManager.IsInRoleAsync(user, "HR Admin");
+                        var isManager = user != null && await UserManager.IsInRoleAsync(user, "Manager");
+                        var isEmployee = user != null && await UserManager.IsInRoleAsync(user, "Employee");
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <h6 class="text-primary">User Information</h6>
+                                <table class="table table-sm">
+                                    <tr><td><strong>Email:</strong></td><td>@(user?.Email ?? "N/A")</td></tr>
+                                    <tr><td><strong>Username:</strong></td><td>@(user?.UserName ?? "N/A")</td></tr>
+                                    <tr><td><strong>User ID:</strong></td><td>@(user?.Id ?? "N/A")</td></tr>
+                                    <tr><td><strong>Email Confirmed:</strong></td><td>@(user?.EmailConfirmed ?? false)</td></tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h6 class="text-success">Role Information</h6>
+                                <table class="table table-sm">
+                                    <tr><td><strong>All Roles:</strong></td><td>@string.Join(", ", userRoles)</td></tr>
+                                    <tr><td><strong>Is HR Admin:</strong></td><td><span class="badge @(isHRAdmin ? "bg-success" : "bg-danger")">@isHRAdmin</span></td></tr>
+                                    <tr><td><strong>Is Manager:</strong></td><td><span class="badge @(isManager ? "bg-success" : "bg-danger")">@isManager</span></td></tr>
+                                    <tr><td><strong>Is Employee:</strong></td><td><span class="badge @(isEmployee ? "bg-success" : "bg-danger")">@isEmployee</span></td></tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="text-warning">Permission Tests</h6>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Employee Directory Access</h6>
+                                        @if (isHRAdmin || isManager)
+                                        {
+                                            <span class="badge bg-success">? Allowed</span>
+                                            <br><a href="/Employees" class="btn btn-sm btn-primary mt-2">Test Access</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">? Denied</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Create Employee</h6>
+                                        @if (isHRAdmin || isManager)
+                                        {
+                                            <span class="badge bg-success">? Allowed</span>
+                                            <br><a href="/Employees/Create" class="btn btn-sm btn-success mt-2">Test Access</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">? Denied</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="card bg-light">
+                                    <div class="card-body text-center">
+                                        <h6>Edit Employee</h6>
+                                        @if (isHRAdmin || isManager)
+                                        {
+                                            <span class="badge bg-success">? Allowed</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-danger">? Denied</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="text-secondary">All Roles in System</h6>
+                        <div class="row">
+                            @foreach (var role in Model.AllRoles)
+                            {
+                                <div class="col-md-3">
+                                    <span class="badge bg-secondary">@role.Name</span>
+                                </div>
+                            }
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="text-secondary">All Users in System</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Roles</th>
+                                        <th>Has Employee Profile</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var sysUser in Model.AllUsers)
+                                    {
+                                        var sysUserRoles = await UserManager.GetRolesAsync(sysUser);
+                                        var hasProfile = Model.GetEmployeeForUser(sysUser.Email) != null;
+                                        <tr>
+                                            <td>@sysUser.Email</td>
+                                            <td>@string.Join(", ", sysUserRoles)</td>
+                                            <td>
+                                                <span class="badge @(hasProfile ? "bg-success" : "bg-danger")">
+                                                    @(hasProfile ? "Yes" : "No")
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            You are not signed in. Please sign in to see debug information.
+                        </div>
+                        <a href="/Identity/Account/Login" class="btn btn-primary">Sign In</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

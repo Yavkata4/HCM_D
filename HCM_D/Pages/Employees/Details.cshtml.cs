@@ -23,9 +23,9 @@ namespace HCM_D.Pages.Employees
             _userManager = userManager;
         }
 
-        public Employee Employee { get; set; }
+        public Employee Employee { get; set; } = new();
 
-        public List<SalaryHistory> SalaryHistoryList { get; set; }
+        public List<SalaryHistory> SalaryHistoryList { get; set; } = new();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -38,21 +38,32 @@ namespace HCM_D.Pages.Employees
 
             Employee = await _context.Employees
                 .Include(e => e.Department)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id) ?? new Employee();
 
-            if (Employee == null)
+            if (Employee.Id == 0)
                 return NotFound();
 
-            // Authorization logic
+            // Authorization logic - Enhanced for employee role
             var isHRAdmin = await _userManager.IsInRoleAsync(user, "HR Admin");
             var isManager = await _userManager.IsInRoleAsync(user, "Manager");
             var isEmployee = await _userManager.IsInRoleAsync(user, "Employee");
 
-            if (isEmployee && Employee.Email != user.Email)
+            if (isEmployee && !isManager && !isHRAdmin)
             {
-                return Forbid(); // Employees can only view their own profile
+                // Employees can only view their own profile
+                if (Employee.Email != user.Email)
+                {
+                    // Redirect to their own profile instead of showing forbidden
+                    var currentEmployee = await _context.Employees
+                        .FirstOrDefaultAsync(e => e.Email == user.Email);
+                    if (currentEmployee != null)
+                    {
+                        return RedirectToPage("/Employees/MyProfile");
+                    }
+                    return Forbid();
+                }
             }
-            if (isManager && !isHRAdmin)
+            else if (isManager && !isHRAdmin)
             {
                 var manager = await _context.Employees.FirstOrDefaultAsync(e => e.Email == user.Email);
                 if (manager == null || Employee.DepartmentId != manager.DepartmentId)

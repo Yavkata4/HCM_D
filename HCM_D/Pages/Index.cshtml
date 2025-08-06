@@ -1,28 +1,240 @@
 ﻿@page
-@model IndexModel
+@model HCM_D.Pages.IndexModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 @{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "";
     Layout = "~/Pages/Shared/_ModernLayout.cshtml";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-4 mb-3">Welcome to NovaHR Solutions</h1>
-    <p class="lead">Empowering your workforce with modern HR management tools.</p>
-    <p class="mb-4">NovaHR Solutions is a leading provider of human capital management software, helping organizations streamline employee management, payroll, and performance tracking. Our platform is designed for efficiency, security, and a great user experience.</p>
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Key Features</h5>
-                    <ul class="list-unstyled mb-0">
-                        <li><i class="bi bi-people-fill me-2"></i>Employee Directory &amp; Profiles</li>
-                        <li><i class="bi bi-building me-2"></i>Department Management</li>
-                        <li><i class="bi bi-currency-dollar me-2"></i>Salary &amp; Payroll History</li>
-                        <li><i class="bi bi-bar-chart-line me-2"></i>Performance Tracking</li>
-                        <li><i class="bi bi-shield-lock me-2"></i>Secure Role-based Access</li>
+@if (SignInManager.IsSignedIn(User))
+{
+    var user = await UserManager.GetUserAsync(User);
+    var isEmployee = user != null && await UserManager.IsInRoleAsync(user, "Employee");
+    var isManager = user != null && await UserManager.IsInRoleAsync(user, "Manager");
+    var isHRAdmin = user != null && await UserManager.IsInRoleAsync(user, "HR Admin");
+
+    @if (isEmployee && !isManager && !isHRAdmin)
+    {
+        <!-- Employee Dashboard -->
+        <div class="container-fluid px-4 py-4">
+            <div class="row justify-content-center">
+                <div class="col-xl-10 col-lg-12">
+                    <!-- Welcome Header -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <div class="card-body text-white p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-white bg-opacity-25 p-3 rounded-circle me-4" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="bi bi-person-heart display-4"></i>
+                                                </div>
+                                                <div>
+                                                    <h2 class="mb-1 fw-bold">Welcome back, @Model.DisplayName!</h2>
+                                                    <p class="mb-1 fs-5 opacity-90">Employee Portal</p>
+                                                    <p class="mb-0 opacity-75">
+                                                        <i class="bi bi-calendar-event me-1"></i>
+                                                        @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 text-md-end">
+                                            <div class="d-flex flex-column align-items-md-end">
+                                                <div class="text-center">
+                                                    <div class="fs-4 fw-bold">@DateTime.Now.ToString("HH:mm")</div>
+                                                    <small class="opacity-75">Current Time</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions for Employee - Restricted to only essential options -->
+                    <div class="row mb-4">
+                        <div class="col-lg-6 col-md-6 mb-3 mx-auto">
+                            <a asp-page="/Employees/MyProfile" class="card border-0 shadow-sm text-decoration-none quick-action-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-primary bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-person-circle text-primary display-5"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-primary mb-1">My Profile</h5>
+                                    <p class="text-muted small mb-0">View personal information</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-6 col-md-6 mb-3 mx-auto">
+                            <a asp-page="/SalaryHistories/MyHistory" class="card border-0 shadow-sm text-decoration-none quick-action-card">
+                                <div class="card-body text-center p-4">
+                                    <div class="bg-success bg-opacity-15 p-3 rounded-circle mx-auto mb-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-clock-history text-success display-5"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-success mb-1">Salary History</h5>
+                                    <p class="text-muted small mb-0">View compensation changes</p>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Removed My Department and Account Settings options -->
+                    </div>
+
+                    <!-- Employee Information Panel -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-header bg-white border-0 pb-0">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary text-white p-2 rounded me-3">
+                                            <i class="bi bi-info-circle"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-0">Employee Portal Information</h5>
+                                            <small class="text-muted">What you can do here</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="fw-bold mb-1">View Your Information</h6>
+                                                    <p class="text-muted mb-0">Access your personal profile and employment details.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="fw-bold mb-1">Track Salary Changes</h6>
+                                                    <p class="text-muted mb-0">See your complete salary history and compensation timeline.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-shield-check text-primary fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="fw-bold mb-1">Privacy Protected</h6>
+                                                    <p class="text-muted mb-0">Your personal information is secure and you can only access your own data.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="bi bi-lock-fill text-warning fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <h6 class="fw-bold mb-1">Restricted Access</h6>
+                                                    <p class="text-muted mb-0">Access is limited to your own information for security and privacy.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Manager/HR Admin Dashboard -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Welcome to ElevateHR Solutions</h1>
+                    <p class="hero-subtitle">Where People Rise.</p>
+                    <p class="hero-description">Empowering your workforce with modern HR management tools.</p>
+                    <p class="hero-details">ElevateHR Solutions is a leading provider of human capital management software, helping organizations streamline employee management, payroll, and performance tracking. Our platform is designed for efficiency, security, and a great user experience.</p>
+                </div>
+                
+                <div class="features-section">
+                    <div class="features-card">
+                        <h5 class="features-title">Key Features</h5>
+                        <ul class="features-list">
+                            <li><i class="bi bi-people-fill"></i>Employee Directory & Profiles</li>
+                            <li><i class="bi bi-building"></i>Department Management</li>
+                            <li><i class="bi bi-currency-dollar"></i>Salary & Payroll History</li>
+                            <li><i class="bi bi-bar-chart-line"></i>Performance Tracking</li>
+                            <li><i class="bi bi-shield-lock"></i>Secure Role-based Access</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <!-- Public Home Page (Original) -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title">Welcome to ElevateHR Solutions</h1>
+                <p class="hero-subtitle">Where People Rise.</p>
+                <p class="hero-description">Empowering your workforce with modern HR management tools.</p>
+                <p class="hero-details">ElevateHR Solutions is a leading provider of human capital management software, helping organizations streamline employee management, payroll, and performance tracking. Our platform is designed for efficiency, security, and a great user experience.</p>
+            </div>
+            
+            <div class="features-section">
+                <div class="features-card">
+                    <h5 class="features-title">Key Features</h5>
+                    <ul class="features-list">
+                        <li><i class="bi bi-people-fill"></i>Employee Directory & Profiles</li>
+                        <li><i class="bi bi-building"></i>Department Management</li>
+                        <li><i class="bi bi-currency-dollar"></i>Salary & Payroll History</li>
+                        <li><i class="bi bi-bar-chart-line"></i>Performance Tracking</li>
+                        <li><i class="bi bi-shield-lock"></i>Secure Role-based Access</li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
+
+<style>
+.quick-action-card {
+    transition: all 0.3s ease;
+    color: inherit;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.quick-action-card:hover .text-primary {
+    color: #0d6efd !important;
+}
+
+.quick-action-card:hover .text-success {
+    color: #198754 !important;
+}
+
+.quick-action-card:hover .text-warning {
+    color: #ffc107 !important;
+}
+
+.quick-action-card:hover .text-info {
+    color: #0dcaf0 !important;
+}
+</style>
