@@ -70,37 +70,60 @@ ElevateHR Solutions is a modern, web-based Human Capital Management system that 
 
 ## 📸 Screenshots
 Admin Page screenshots -
+
+
 <img width="1809" height="935" alt="image" src="https://github.com/user-attachments/assets/5f4f8df6-3f5d-4bf4-996a-4f974a716e6c" />
-<img width="1810" height="930" alt="image 2png" src="https://github.com/user-attachments/assets/d0e45821-6fc5-44a1-80b0-8e6563b98a86" />
-<img width="1820" height="929" alt="image3" src="https://github.com/user-attachments/assets/609d2dbd-0dcd-4dff-8dde-2a98adc4c71a" />
+<img width="1815" height="936" alt="image" src="https://github.com/user-attachments/assets/7eb15d13-6fd9-4f78-be28-772a3078529f" />
+<img width="1817" height="938" alt="image" src="https://github.com/user-attachments/assets/69bb66f5-5289-4228-bf34-95f76f39d1c8" />
+<img width="1816" height="932" alt="image" src="https://github.com/user-attachments/assets/c98a18ba-36e8-4857-96ac-81ea582673d6" />
+<img width="1816" height="936" alt="image" src="https://github.com/user-attachments/assets/cfbc27b0-9ace-4b3d-a033-0f16ac6e33b3" />
+<img width="1814" height="933" alt="image" src="https://github.com/user-attachments/assets/498409a5-9b1e-4222-a7bc-3abea7143901" />
+<img width="1817" height="936" alt="image" src="https://github.com/user-attachments/assets/283b0025-ec3c-4f9d-85ba-bba4ba21641c" />
+<img width="1812" height="932" alt="image" src="https://github.com/user-attachments/assets/b18a2749-c3e7-43f9-8636-e9b9dd25e0b0" />
+<img width="1816" height="928" alt="image" src="https://github.com/user-attachments/assets/fda5023b-44dc-4f03-9a1a-b4c0884bfa8a" />
 <img width="1812" height="930" alt="image4" src="https://github.com/user-attachments/assets/4ed6be7a-5505-4e74-bba3-448d11827a75" />
+<img width="1818" height="939" alt="image" src="https://github.com/user-attachments/assets/3d70403b-b0d3-4c30-badf-54069b6744d5" />
+<img width="1818" height="936" alt="image" src="https://github.com/user-attachments/assets/0f132818-a5ba-4f7d-ae9f-f4ade3689184" />
 <img width="1815" height="932" alt="image5" src="https://github.com/user-attachments/assets/39c42d7c-53c3-47ea-a020-0400c6c26256" />
 <img width="1815" height="933" alt="image6" src="https://github.com/user-attachments/assets/d2c3347c-b7dd-4b14-814b-36ba0c198f0f" />
 <img width="1817" height="930" alt="image7" src="https://github.com/user-attachments/assets/8540773b-04fd-4b91-8d84-b27290275679" />
 <img width="1817" height="934" alt="image8" src="https://github.com/user-attachments/assets/1701ed58-62a1-4f21-9f9a-0e577793edd4" />
 
 
+
+
+
+
 Employee Login screenshots-
-<img width="1810" height="934" alt="image3" src="https://github.com/user-attachments/assets/c5be9b40-9813-46be-a964-22aa435f6c73" />
-<img width="1815" height="932" alt="image2" src="https://github.com/user-attachments/assets/96791544-2590-4a0c-a046-13083f4d8f5c" />
+<img width="1812" height="930" alt="image" src="https://github.com/user-attachments/assets/c3aca233-4f22-4e3c-8b93-e30cce56de48" />
 <img width="1816" height="933" alt="image" src="https://github.com/user-attachments/assets/241dd65c-1226-4be6-98b2-897514677095" />
+<img width="1815" height="932" alt="image2" src="https://github.com/user-attachments/assets/96791544-2590-4a0c-a046-13083f4d8f5c" />
+<img width="1810" height="934" alt="image3" src="https://github.com/user-attachments/assets/c5be9b40-9813-46be-a964-22aa435f6c73" />
+
+
 
 Manager Login screenshots-
-<img width="1819" height="931" alt="image7" src="https://github.com/user-attachments/assets/8a8333ac-84b6-43bd-aa14-1026307df0d5" />
-<img width="1819" height="928" alt="image6" src="https://github.com/user-attachments/assets/fae4816c-430d-40ad-902f-2f7f1e7adaea" />
-<img width="1815" height="937" alt="image5" src="https://github.com/user-attachments/assets/ad539f7f-a49f-4606-b176-e8eb48ada773" />
-<img width="1802" height="931" alt="image4" src="https://github.com/user-attachments/assets/fa662634-8902-4160-843e-012f1108e5fa" />
-<img width="1813" height="937" alt="image3" src="https://github.com/user-attachments/assets/b9b00edd-638e-47d5-97c6-e91206addbee" />
-<img width="1799" height="926" alt="image2" src="https://github.com/user-attachments/assets/4dbf0cdc-d7e7-4b35-93fb-b782515947e3" />
 <img width="1821" height="937" alt="image" src="https://github.com/user-attachments/assets/f6912081-2adc-4033-a9e2-064983b8ac2b" />
+<img width="1799" height="926" alt="image2" src="https://github.com/user-attachments/assets/4dbf0cdc-d7e7-4b35-93fb-b782515947e3" />
+<img width="1813" height="937" alt="image3" src="https://github.com/user-attachments/assets/b9b00edd-638e-47d5-97c6-e91206addbee" />
+<img width="1802" height="931" alt="image4" src="https://github.com/user-attachments/assets/fa662634-8902-4160-843e-012f1108e5fa" />
+<img width="1815" height="937" alt="image5" src="https://github.com/user-attachments/assets/ad539f7f-a49f-4606-b176-e8eb48ada773" />
+<img width="1819" height="928" alt="image6" src="https://github.com/user-attachments/assets/fae4816c-430d-40ad-902f-2f7f1e7adaea" />
+<img width="1819" height="931" alt="image7" src="https://github.com/user-attachments/assets/8a8333ac-84b6-43bd-aa14-1026307df0d5" />
+
+
+
+
 
 Other screenshots -
 Logged out view-
+
 <img width="1811" height="937" alt="logged out" src="https://github.com/user-attachments/assets/cb6d6795-dc9b-40ff-bb14-af5990644d40" />
 
 Privacy Policy -
+
 <img width="1819" height="933" alt="Privacy Policy" src="https://github.com/user-attachments/assets/7d700624-40e2-43c4-8dd4-7efbbe83e7c9" />
-olicy
+
 
 ## 🛠 Prerequisites
 
@@ -193,8 +216,8 @@ The application automatically creates a default admin user:
 | Role | Email | Password | Description |
 |------|-------|----------|-------------|
 | HR Admin | `admin@hr.com` | `Admin@123` | Full system access |
- Manager    manager@company.com  Manager@123
- Employee   employee@company.com Employee@123
+| Manager | `manager@company.com` | `Manager@123` | Department Access |
+| Employee | `employee@company.com` | `Employee@123` | Personal Access |
 
 
 ### Creating Additional Users
@@ -311,36 +334,7 @@ Monitor application health at `/health`:
 - Employee data integrity
 - Entity Framework Core status
 
-## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
-
-### Development Guidelines
-- Follow C# coding conventions
-- Add unit tests for new features
-- Update documentation as needed
-- Ensure all health checks pass
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📧 Support
-
-### Getting Help
-- 🐛 **Bug Reports**: [Create an issue](../../issues)
-- 💡 **Feature Requests**: [Create an issue](../../issues)
-- 📖 **Documentation**: Check this README and inline code comments
-
-### Contact Information
-- **Support Email**: support@elevatehr.com
-- **Privacy Policy**: Available at `/Privacy` when running the application
 
 ### Common Issues
 
@@ -355,10 +349,3 @@ A: Ensure you're authenticated through the web interface first.
 
 ---
 
-<div align="center">
-
-**Built with ❤️ by the ElevateHR Solutions Team**
-
-[Report Bug](../../issues) · [Request Feature](../../issues) · [Documentation](README.md)
-
-</div>
