@@ -69,8 +69,37 @@ ElevateHR Solutions is a modern, web-based Human Capital Management system that 
 - **Audit Logging** - Complete audit trails for all sensitive operations
 
 ## 📸 Screenshots
+Admin Page screenshots -
+<img width="1817" height="934" alt="image8" src="https://github.com/user-attachments/assets/1701ed58-62a1-4f21-9f9a-0e577793edd4" />
+<img width="1817" height="930" alt="image7" src="https://github.com/user-attachments/assets/8540773b-04fd-4b91-8d84-b27290275679" />
+<img width="1815" height="933" alt="image6" src="https://github.com/user-attachments/assets/d2c3347c-b7dd-4b14-814b-36ba0c198f0f" />
+<img width="1815" height="932" alt="image5" src="https://github.com/user-attachments/assets/39c42d7c-53c3-47ea-a020-0400c6c26256" />
+<img width="1812" height="930" alt="image4" src="https://github.com/user-attachments/assets/4ed6be7a-5505-4e74-bba3-448d11827a75" />
+<img width="1820" height="929" alt="image3" src="https://github.com/user-attachments/assets/609d2dbd-0dcd-4dff-8dde-2a98adc4c71a" />
+<img width="1810" height="930" alt="image 2png" src="https://github.com/user-attachments/assets/d0e45821-6fc5-44a1-80b0-8e6563b98a86" />
+<img width="1809" height="935" alt="image" src="https://github.com/user-attachments/assets/5f4f8df6-3f5d-4bf4-996a-4f974a716e6c" />
 
-> Note: Add screenshots of your application here to showcase the UI
+Employee Login screenshots-
+<img width="1810" height="934" alt="image3" src="https://github.com/user-attachments/assets/c5be9b40-9813-46be-a964-22aa435f6c73" />
+<img width="1815" height="932" alt="image2" src="https://github.com/user-attachments/assets/96791544-2590-4a0c-a046-13083f4d8f5c" />
+<img width="1816" height="933" alt="image" src="https://github.com/user-attachments/assets/241dd65c-1226-4be6-98b2-897514677095" />
+
+Manager Login screenshots-
+<img width="1819" height="931" alt="image7" src="https://github.com/user-attachments/assets/8a8333ac-84b6-43bd-aa14-1026307df0d5" />
+<img width="1819" height="928" alt="image6" src="https://github.com/user-attachments/assets/fae4816c-430d-40ad-902f-2f7f1e7adaea" />
+<img width="1815" height="937" alt="image5" src="https://github.com/user-attachments/assets/ad539f7f-a49f-4606-b176-e8eb48ada773" />
+<img width="1802" height="931" alt="image4" src="https://github.com/user-attachments/assets/fa662634-8902-4160-843e-012f1108e5fa" />
+<img width="1813" height="937" alt="image3" src="https://github.com/user-attachments/assets/b9b00edd-638e-47d5-97c6-e91206addbee" />
+<img width="1799" height="926" alt="image2" src="https://github.com/user-attachments/assets/4dbf0cdc-d7e7-4b35-93fb-b782515947e3" />
+<img width="1821" height="937" alt="image" src="https://github.com/user-attachments/assets/f6912081-2adc-4033-a9e2-064983b8ac2b" />
+
+Other screenshots -
+Logged out view-
+<img width="1811" height="937" alt="logged out" src="https://github.com/user-attachments/assets/cb6d6795-dc9b-40ff-bb14-af5990644d40" />
+
+Privacy Policy -
+<img width="1819" height="933" alt="Privacy Policy" src="https://github.com/user-attachments/assets/7d700624-40e2-43c4-8dd4-7efbbe83e7c9" />
+olicy
 
 ## 🛠 Prerequisites
 
@@ -163,8 +192,9 @@ The application automatically creates a default admin user:
 | Role | Email | Password | Description |
 |------|-------|----------|-------------|
 | HR Admin | `admin@hr.com` | `Admin@123` | Full system access |
+ Manager    manager@company.com  Manager@123
+ Employee   employee@company.com Employee@123
 
-**⚠️ Important**: Change the default password after first login for security.
 
 ### Creating Additional Users
 1. Register new users through the registration page
