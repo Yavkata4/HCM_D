@@ -70,14 +70,15 @@ ElevateHR Solutions is a modern, web-based Human Capital Management system that 
 
 ## 📸 Screenshots
 Admin Page screenshots -
-<img width="1817" height="934" alt="image8" src="https://github.com/user-attachments/assets/1701ed58-62a1-4f21-9f9a-0e577793edd4" />
-<img width="1817" height="930" alt="image7" src="https://github.com/user-attachments/assets/8540773b-04fd-4b91-8d84-b27290275679" />
-<img width="1815" height="933" alt="image6" src="https://github.com/user-attachments/assets/d2c3347c-b7dd-4b14-814b-36ba0c198f0f" />
-<img width="1815" height="932" alt="image5" src="https://github.com/user-attachments/assets/39c42d7c-53c3-47ea-a020-0400c6c26256" />
-<img width="1812" height="930" alt="image4" src="https://github.com/user-attachments/assets/4ed6be7a-5505-4e74-bba3-448d11827a75" />
-<img width="1820" height="929" alt="image3" src="https://github.com/user-attachments/assets/609d2dbd-0dcd-4dff-8dde-2a98adc4c71a" />
-<img width="1810" height="930" alt="image 2png" src="https://github.com/user-attachments/assets/d0e45821-6fc5-44a1-80b0-8e6563b98a86" />
 <img width="1809" height="935" alt="image" src="https://github.com/user-attachments/assets/5f4f8df6-3f5d-4bf4-996a-4f974a716e6c" />
+<img width="1810" height="930" alt="image 2png" src="https://github.com/user-attachments/assets/d0e45821-6fc5-44a1-80b0-8e6563b98a86" />
+<img width="1820" height="929" alt="image3" src="https://github.com/user-attachments/assets/609d2dbd-0dcd-4dff-8dde-2a98adc4c71a" />
+<img width="1812" height="930" alt="image4" src="https://github.com/user-attachments/assets/4ed6be7a-5505-4e74-bba3-448d11827a75" />
+<img width="1815" height="932" alt="image5" src="https://github.com/user-attachments/assets/39c42d7c-53c3-47ea-a020-0400c6c26256" />
+<img width="1815" height="933" alt="image6" src="https://github.com/user-attachments/assets/d2c3347c-b7dd-4b14-814b-36ba0c198f0f" />
+<img width="1817" height="930" alt="image7" src="https://github.com/user-attachments/assets/8540773b-04fd-4b91-8d84-b27290275679" />
+<img width="1817" height="934" alt="image8" src="https://github.com/user-attachments/assets/1701ed58-62a1-4f21-9f9a-0e577793edd4" />
+
 
 Employee Login screenshots-
 <img width="1810" height="934" alt="image3" src="https://github.com/user-attachments/assets/c5be9b40-9813-46be-a964-22aa435f6c73" />
